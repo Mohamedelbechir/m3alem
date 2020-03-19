@@ -1,4 +1,4 @@
-class CodeImage {
+class CodePhoto {
   static final photoAssurance = 'CODE_PHOTO_ASSURANCE';
   static final String photoPermis = "CODE_PHOTO_PERSMIS";
   static final String photoCarteGrise = "CODE_PHOTO_CARTE_GRISE";

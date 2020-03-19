@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage>
     return new Scaffold(
       key: _scaffoldKey,
       body: BlocProvider<LoginBloc>(
-        builder: (context) {
+        create: (context) {
           return LoginBloc(
             authentificationBloc:
                 BlocProvider.of<AuthentificationBloc>(context),
@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage>
                       new ConstrainedBox(
                         constraints: const BoxConstraints.expand(),
                         child: BlocProvider<RegisterBloc>(
-                          builder: (context) => RegisterBloc(
+                          create: (context) => RegisterBloc(
                             authentificationBloc: _blocAuth,
                             utilisateurRepository:
                                 RepositoryProvider.of<UtilisateurRepository>(
@@ -264,7 +264,7 @@ class _LoginPageState extends State<LoginPage>
   Widget _buildSignIn(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     _onLoginButtonPressed() {
-      loginBloc.dispatch(LoginButtonPressed(
+      loginBloc.add(LoginButtonPressed(
         username: _loginCinController.text,
         password: _loginPasswordController.text,
       ));
@@ -854,7 +854,7 @@ class _LiginSignUpState extends State<LiginSignUp> {
                           if (_formSignUp.currentState.validate()) {
                             _formSignUp.currentState.save();
 
-                            bloc.dispatch(
+                            bloc.add(
                               AddResgister(
                                 utilisateur: Utilisateur(
                                   cin: _cin,
@@ -902,7 +902,7 @@ class _LoginSignInState extends State<LoginSignIn> {
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     _onLoginButtonPressed() {
-      loginBloc.dispatch(LoginButtonPressed(
+      loginBloc.add(LoginButtonPressed(
         username: _loginCinController.text,
         password: _loginPasswordController.text,
       ));

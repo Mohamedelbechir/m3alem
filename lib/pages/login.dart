@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        builder: (context) {
+        create: (context) {
           return LoginBloc(
             authentificationBloc: BlocProvider.of<AuthentificationBloc>(context),
             utilisateurRepository: utilisateurRepository,
@@ -46,7 +46,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
     _onLoginButtonPressed() {
-      loginBloc.dispatch(LoginButtonPressed(
+      loginBloc.add(LoginButtonPressed(
         username: _controllerTextId.text,
         password: _controllerTextPass.text,
       ));

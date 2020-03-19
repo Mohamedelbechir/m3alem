@@ -37,9 +37,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         else {
           if (utilisateur.etatInscription ==
               EtatInscription.enAttenteInscription)
-            authentificationBloc.dispatch(AccountIncomplet(utilisateur: utilisateur));
+            authentificationBloc.add(AccountIncomplet(utilisateur: utilisateur));
           else {
-            authentificationBloc.dispatch(LoggedIn(utilisateur: utilisateur));
+            authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
             yield LoginInitial();
           }
         }

@@ -62,13 +62,14 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
     }
   }
 
-  Future<File> uploadPhotos(int cin, String imageCode,File imageFile) async {
+  Future<File> uploadPhotos(int cin, String codePhoto, File imageFile) async {
     try {
       var stream =
           new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
       var length = await imageFile.length();
 
-      var uri = Uri.parse(serverAdresse);
+      var uri =
+          Uri.parse('$serverAdresse' + "/utilisateurs/photos/$cin/$codePhoto");
 
       var request = new http.MultipartRequest("POST", uri);
       var multipartFile = new http.MultipartFile('file', stream, length,
@@ -76,8 +77,8 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
       //contentType: new MediaType('image', 'png'));
 
       request.files.add(multipartFile);
-      request.fields["cin"] = cin.toString();
-      request.fields["imageCode"] = imageCode;
+      /* request.fields["cin"] = cin.toString();
+      request.fields["imageCode"] = codePhoto; */
       var response = await request.send();
       if (response.statusCode == 200) {
         return imageFile;

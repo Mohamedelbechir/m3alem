@@ -47,10 +47,10 @@ void main() {
   final utilisateurRepository = UtilisateurRepository();
   runApp(
     BlocProvider<AuthentificationBloc>(
-      builder: (context) { 
+      create: (context) { 
         return AuthentificationBloc(
             utilisateurRepository: utilisateurRepository)
-          ..dispatch(AppStarted());
+          ..add(AppStarted());
       },
       /* A chaque fois qu'un évement est mis alors 
           il dit aux nœuds dependant de se reconstruire
@@ -87,7 +87,7 @@ class MyApp extends StatelessWidget {
       builder: (context, widget) => MultiRepositoryProvider(
         providers: [
           RepositoryProvider<UtilisateurRepository>(
-            builder: (context) => UtilisateurRepository(),
+            create: (context) => UtilisateurRepository(),
           ),
           /*  RepositoryProvider<PatientRepositorySql>(
             builder: (context) => PatientRepositorySql(),
