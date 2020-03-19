@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:m3alem/block/authentification_block.dart';
-import 'package:m3alem/block/authentification_event.dart';
-import 'package:m3alem/block/authentification_state.dart';
+import 'package:m3alem/bloc/authentification_bloc.dart';
+import 'package:m3alem/bloc/authentification_event.dart';
+import 'package:m3alem/bloc/authentification_state.dart';
+import 'package:m3alem/pages/complete_dossier.dart';
 import 'package:m3alem/pages/home.dart';
 import 'package:m3alem/pages/login_page.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
@@ -46,9 +47,9 @@ void main() {
   final utilisateurRepository = UtilisateurRepository();
   runApp(
     BlocProvider<AuthentificationBloc>(
-      
-      builder: (context) {
-        return AuthentificationBloc(utilisateurRepository: utilisateurRepository)
+      builder: (context) { 
+        return AuthentificationBloc(
+            utilisateurRepository: utilisateurRepository)
           ..dispatch(AppStarted());
       },
       /* A chaque fois qu'un évement est mis alors 
@@ -71,7 +72,6 @@ class MyApp extends StatelessWidget {
       checkerboardOffscreenLayers: true,
       theme: ThemeData(
         primarySwatch: Colors.grey,
-       
       ),
       /*  builder: (context, widget) => MultiProvider(
         providers: [
@@ -89,11 +89,9 @@ class MyApp extends StatelessWidget {
           RepositoryProvider<UtilisateurRepository>(
             builder: (context) => UtilisateurRepository(),
           ),
-         /*  RepositoryProvider<PatientRepositorySql>(
+          /*  RepositoryProvider<PatientRepositorySql>(
             builder: (context) => PatientRepositorySql(),
           ), */
-          
-          
         ],
         child: widget,
       ),
@@ -103,8 +101,13 @@ class MyApp extends StatelessWidget {
             //return HomePage();
             return HomePage();
           }
+          if(state is ImcompletedAccount){
+            return ImcompletCompletDossier();
+          }
           if (state is AuthentificationUnauthenticated) {
-            return LoginPage(utilisateurRepository: utilisateurRepository);
+            return LoginPage(
+                utilisateurRepository:
+                    RepositoryProvider.of<UtilisateurRepository>(context));
           }
           if (state is AuthentificationLoading) {
             return LoadingIndicator();
@@ -112,7 +115,6 @@ class MyApp extends StatelessWidget {
           return SplashPage();
         },
       ),
-      
     );
   }
 }
