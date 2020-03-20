@@ -10,7 +10,12 @@ import 'package:m3alem/utils/code_image.dart';
 class ItemAddPhotoDoc extends StatefulWidget {
   final String title;
   final String content;
-  ItemAddPhotoDoc({@required this.title, @required this.content});
+  final String codePhoto;
+  ItemAddPhotoDoc({
+    @required this.title,
+    @required this.content,
+    @required this.codePhoto,
+  });
   @override
   _ItemAddPhotoDocState createState() => _ItemAddPhotoDocState();
 }
@@ -48,26 +53,34 @@ class _ItemAddPhotoDocState extends State<ItemAddPhotoDoc> {
                     style: TextStyle(fontSize: 25),
                   ),
                   Text(widget.content),
-                  BlocBuilder<PhotosBloc, PhotosState>(
-                    builder: (context, state) {
-                      if (state is PhotosInitial) if (_image == null)
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: Text('Aucune image selectionnée'),
+                  BlocConsumer<PhotosBloc, PhotosState>(
+                    listener: (context, state) {
+                      if (state is PhotoAdded) {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${state.message}'),
+                            backgroundColor: Colors.green,
                           ),
                         );
-                      else {
-                        return Container(
-                            height: 200,
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Image.file(_image));
                       }
-                      else if (state is PhotoLoaded)
+                    },
+                    builder: (context, state) {
+                      if (state is PhotosInitial) {
+                        if (_image == null)
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              child: Text('Aucune image selectionnée'),
+                            ),
+                          );
+                        else {
+                          return _buildContainerPhoto();
+                        }
+                      } else if (state is PhotoLoaded)
                         return Container(
                           height: 200,
                           padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Image.file(state.file),
+                          child: Image.file(_image ?? state.file),
                         );
                       return Container();
                     },
@@ -96,7 +109,7 @@ class _ItemAddPhotoDocState extends State<ItemAddPhotoDoc> {
                         child: RaisedButton(
                           onPressed: () => context.bloc<PhotosBloc>().add(
                                 AddPhoto(
-                                  codePhoto: CodePhoto.photoAssurance,
+                                  codePhoto: widget.codePhoto,
                                   file: _image,
                                 ),
                               ),
@@ -117,5 +130,12 @@ class _ItemAddPhotoDocState extends State<ItemAddPhotoDoc> {
         ),
       ),
     );
+  }
+
+  _buildContainerPhoto() {
+    return Container(
+        height: 200,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: Image.file(_image));
   }
 }

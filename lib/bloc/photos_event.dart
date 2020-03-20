@@ -22,3 +22,11 @@ class LoadPhoto extends PhotosEvent {
   @override
   List get props => [this.cin, this.codePhoto];
 }
+class TestHasPhoto extends PhotosEvent {
+  final String codePhoto;
+
+  TestHasPhoto({this.codePhoto});
+  @override
+  List get props => [this.codePhoto];
+
+}

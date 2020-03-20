@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
@@ -62,7 +64,20 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
     }
   }
 
-  Future<File> uploadPhotos(int cin, String codePhoto, File imageFile) async {
+  Future<Uint8List> getPhoto({int cin, String codePhoto}) async {
+    try {
+      final response =
+          await http.get('$serverAdresse/utilisateur/images/$cin/$codePhoto');
+      if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
+        return response.bodyBytes;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<File> uploadPhotos({int cin, String codePhoto, File imageFile}) async {
     try {
       var stream =
           new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
@@ -71,7 +86,7 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
       var uri =
           Uri.parse('$serverAdresse' + "/utilisateurs/photos/$cin/$codePhoto");
 
-      var request = new http.MultipartRequest("POST", uri);
+      var request = new http.MultipartRequest("PUT", uri);
       var multipartFile = new http.MultipartFile('file', stream, length,
           filename: basename(imageFile.path));
       //contentType: new MediaType('image', 'png'));
@@ -80,7 +95,7 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
       /* request.fields["cin"] = cin.toString();
       request.fields["imageCode"] = codePhoto; */
       var response = await request.send();
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return imageFile;
         /*  response.stream.transform(utf8.decoder).listen((value) {
          
