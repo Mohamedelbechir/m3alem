@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m3alem/bloc/authentification_bloc.dart';
 import 'package:m3alem/bloc/authentification_event.dart';
 import 'package:m3alem/bloc/authentification_state.dart';
+import 'package:m3alem/pages/account_progression_page.dart';
+import 'package:m3alem/pages/passager_interface_page.dart';
 import 'package:m3alem/pages/complete_dossier.dart';
-import 'package:m3alem/pages/home.dart';
+import 'package:m3alem/pages/driver_interface.dart';
 import 'package:m3alem/pages/login_page.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
 
@@ -16,7 +18,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Splash Screen'),
+        child: Text('Chargement...'),
       ),
     );
   }
@@ -47,7 +49,7 @@ void main() {
   final utilisateurRepository = UtilisateurRepository();
   runApp(
     BlocProvider<AuthentificationBloc>(
-      create: (context) { 
+      create: (context) {
         return AuthentificationBloc(
             utilisateurRepository: utilisateurRepository)
           ..add(AppStarted());
@@ -99,10 +101,10 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           if (state is AuthentificationAuthenticated) {
             //return HomePage();
-            return HomePage();
+            return PassagerInterfacePage();
           }
-          if(state is ImcompletedAccount){
-            return ImcompletCompletDossier();
+          if (state is AuthentificationAuthenticatedChauffeur) {
+            return DriverInterface();
           }
           if (state is AuthentificationUnauthenticated) {
             return LoginPage(
@@ -111,6 +113,15 @@ class MyApp extends StatelessWidget {
           }
           if (state is AuthentificationLoading) {
             return LoadingIndicator();
+          }
+          if (state is AccountProgress) {
+            return AccountProgressionPage(
+              etat: state.etat,
+              message: state.message,
+            );
+          }
+          if (state is ImcompletedAccount) {
+            return ImcompletCompletDossier();
           }
           return SplashPage();
         },

@@ -5,6 +5,7 @@ import 'package:m3alem/bloc/login_state.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:m3alem/utils/etat_inscription.dart';
+import 'package:m3alem/utils/type_utilisateur.dart';
 
 import 'authentification_event.dart';
 
@@ -23,7 +24,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    
     if (event is LoginButtonPressed) {
       yield LoginLoading();
 
@@ -34,14 +34,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         );
         if (utilisateur == null)
           yield LoginFailure(error: 'Login ou mot de passe incorrect');
+        else if (utilisateur.typeUtilisateur == TypeUtilisateur.passager) {
+          authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
+        }
+
+        if (utilisateur.etatInscription == EtatInscription.enAttenteInscription)
+          authentificationBloc.add(AccountIncomplet(utilisateur: utilisateur));
         else {
-          if (utilisateur.etatInscription ==
-              EtatInscription.enAttenteInscription)
-            authentificationBloc.add(AccountIncomplet(utilisateur: utilisateur));
-          else {
-            authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
-            yield LoginInitial();
-          }
+          authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
+          yield LoginInitial();
         }
       } catch (error) {
         yield LoginFailure(error: error.toString());

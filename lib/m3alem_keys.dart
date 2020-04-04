@@ -6,7 +6,7 @@ class AppM3alemKeys {
   static final emptyStatsContainer = const Key('__emptyStatsContainer__');
   static final emptyDetailsContainer = const Key('__emptyDetailsContainer__');
 
-  static final patientList = const Key('__listChauffeur__');
-  static final failureKey = const Key('__failureKey__');
-  static final calendar = const Key('__calendarKey__');
+  static final driverMap = const Key('__driverMap__');
+  static final driverMoney = const Key('__driverMoney__');
+  static final driverSetting = const Key('__driverSetting__');
 }

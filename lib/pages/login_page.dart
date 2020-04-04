@@ -548,7 +548,6 @@ class LiginSignUp extends StatefulWidget {
   _LiginSignUpState createState() => _LiginSignUpState();
 }
 
-
 class _LiginSignUpState extends State<LiginSignUp> {
   final GlobalKey<FormState> _formSignUp = GlobalKey<FormState>();
   bool _asDriver = false;
@@ -566,7 +565,6 @@ class _LiginSignUpState extends State<LiginSignUp> {
 
   TextEditingController _controllerPassword = TextEditingController();
   TextEditingController _controllerConfirmPassword = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -870,7 +868,7 @@ class _LiginSignUpState extends State<LiginSignUp> {
                                           ? EtatInscription.enAttenteInscription
                                           : EtatInscription.inconnuInscription,
                                   typeUtilisateur: _asClient
-                                      ? TypeUtilisateur.client
+                                      ? TypeUtilisateur.passager
                                       : _asDriver
                                           ? TypeUtilisateur.chauffeur
                                           : TypeUtilisateur.inconnu,

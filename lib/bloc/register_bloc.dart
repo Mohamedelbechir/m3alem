@@ -33,6 +33,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         yield RegisterSuccess(utilisateur: user);
         if (user.typeUtilisateur == TypeUtilisateur.chauffeur)
           authentificationBloc.add(AccountIncomplet(utilisateur: user));
+        else if (user.typeUtilisateur == TypeUtilisateur.passager) {
+          authentificationBloc.add(AccountIncomplet(utilisateur: user));
+        }
       } else
         yield RegisterError(message: "Echec lors de votre inscription");
     } catch (_) {

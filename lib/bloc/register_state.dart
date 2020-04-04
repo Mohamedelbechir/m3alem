@@ -25,7 +25,6 @@ class RegisterError extends RegisterState{
   final String message;
   RegisterError({this.message});
   @override
-  // TODO: implement props
   List get props => [this.message];
   
 }
