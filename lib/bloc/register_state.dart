@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:m3alem/models/utilisateur.dart';
+import 'package:m3alem/models/freezed_classes.dart';
 
 abstract class RegisterState extends Equatable {
   RegisterState();

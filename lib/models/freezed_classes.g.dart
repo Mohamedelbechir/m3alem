@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'utilisateur.dart';
+part of 'freezed_classes.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Utilisateur _$UtilisateurFromJson(Map<String, dynamic> json) {
-  return Utilisateur(
+_$_Utilisateur _$_$_UtilisateurFromJson(Map<String, dynamic> json) {
+  return _$_Utilisateur(
     cin: json['cin'] as int,
     nom: json['nom'] as String,
     prenom: json['prenom'] as String,
@@ -25,10 +25,11 @@ Utilisateur _$UtilisateurFromJson(Map<String, dynamic> json) {
     typeUtilisateur: json['typeUtilisateur'] as String,
     etatInscription: json['etatInscription'] as String,
     etatCompte: json['etatCompte'] as String,
+    isOnLine: json['isOnLine'] as bool,
   );
 }
 
-Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
+Map<String, dynamic> _$_$_UtilisateurToJson(_$_Utilisateur instance) =>
     <String, dynamic>{
       'cin': instance.cin,
       'nom': instance.nom,
@@ -43,4 +44,29 @@ Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
       'typeUtilisateur': instance.typeUtilisateur,
       'etatInscription': instance.etatInscription,
       'etatCompte': instance.etatCompte,
+      'isOnLine': instance.isOnLine,
+    };
+
+_$_Course _$_$_CourseFromJson(Map<String, dynamic> json) {
+  return _$_Course(
+    idPassager: json['idPassager'] as int,
+    idDriver: json['idDriver'] as int,
+    depart: json['depart'] as String,
+    arrivee: json['arrivee'] as String,
+    distance: (json['distance'] as num)?.toDouble(),
+    prixCourse: (json['prixCourse'] as num)?.toDouble(),
+    dateCourse: json['dateCourse'] == null
+        ? null
+        : DateTime.parse(json['dateCourse'] as String),
+  );
+}
+
+Map<String, dynamic> _$_$_CourseToJson(_$_Course instance) => <String, dynamic>{
+      'idPassager': instance.idPassager,
+      'idDriver': instance.idDriver,
+      'depart': instance.depart,
+      'arrivee': instance.arrivee,
+      'distance': instance.distance,
+      'prixCourse': instance.prixCourse,
+      'dateCourse': instance.dateCourse?.toIso8601String(),
     };

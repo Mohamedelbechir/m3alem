@@ -3,12 +3,12 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:m3alem/models/freezed_classes.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:m3alem/models/utilisateur.dart';
 import 'package:m3alem/repository/repository.dart';
 
 class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
@@ -168,4 +168,24 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
     final utilisateur = Utilisateur.fromJson(json.decode(value));
     return utilisateur;
   }
+
+  Future<bool> setOnline(int cin, bool value) async {
+    try {
+      final response = await http.post(
+        '$serverAdresse/utilisateurs/online/$cin/$value',
+        headers: headers,
+      );
+      if (response.statusCode < 200 ||
+          response.statusCode > 400 ||
+          json == null) {
+        return null;
+      }
+      Map<String, dynamic> data = json.decode(response.body);
+      final result = data['resultat'] as bool;
+      // return true if send value eq to response
+      return result == value;
+    } catch (e) {
+      return false;
+    }
+}
 }

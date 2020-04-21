@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m3alem/bloc/authentification_bloc.dart';
+import 'package:m3alem/bloc/driver_map_bloc.dart';
 import 'package:m3alem/m3alem_keys.dart';
 import 'package:m3alem/pages/driver_map_page.dart';
 import 'package:m3alem/pages/driver_money_page.dart';
 import 'package:m3alem/pages/driver_setting_page.dart';
-import 'package:m3alem/widgets/bottom_navigation.dart';
+import 'package:m3alem/repository/utilisateur_repository.dart';
+import 'package:m3alem/widgets/bottom_navigation_custom.dart';
 
 class DriverInterface extends StatefulWidget {
   @override
@@ -11,12 +15,17 @@ class DriverInterface extends StatefulWidget {
 }
 
 class _DriverInterfaceState extends State<DriverInterface> {
-
   int _currentIndex = 0;
   final navigatorKey = GlobalKey<NavigatorState>();
 
   final _listMenu = <Widget>[
-    DriverMapPage(key: AppM3alemKeys.driverMap),
+    BlocProvider(
+      create: (context) => DriverMapBloc(
+        authentificationBloc: context.bloc<AuthentificationBloc>(),
+        utilisateurRepository: context.repository<UtilisateurRepository>(),
+      )..add(DisplayDriverMap()),
+      child: DriverMapPage(key: AppM3alemKeys.driverMap),
+    ),
     DriverMoneyPage(key: AppM3alemKeys.driverMoney),
     DriverSettingPage(key: AppM3alemKeys.driverSetting),
   ];
@@ -42,7 +51,8 @@ class _DriverInterfaceState extends State<DriverInterface> {
       },
       child: Scaffold(
         body: _listMenu[_currentIndex],
-        bottomNavigationBar: BottomNavigationForDriver(
+        bottomNavigationBar: CustumBottomNavigation(
+          typeMenu: TypeMenu.driver,
           currentIndex: _currentIndex,
           onSelectNav: _onSelectNav,
         ),

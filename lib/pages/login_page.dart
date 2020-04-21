@@ -8,7 +8,7 @@ import 'package:m3alem/bloc/login_event.dart';
 import 'package:m3alem/bloc/login_state.dart';
 import 'package:m3alem/bloc/register_bloc.dart';
 import 'package:m3alem/bloc/register_event.dart';
-import 'package:m3alem/models/utilisateur.dart';
+import 'package:m3alem/models/freezed_classes.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
 import 'package:m3alem/utils/bubble_indication_painter.dart.dart';
 import 'package:m3alem/styles/themes.dart' as Theme;
@@ -944,7 +944,7 @@ class _LoginSignInState extends State<LoginSignIn> {
                                 left: 25.0,
                                 right: 25.0),
                             child: TextField(
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType.phone,
                               controller: _loginCinController,
                               style: TextStyle(
                                   fontFamily: "WorkSansSemiBold",
@@ -952,6 +952,7 @@ class _LoginSignInState extends State<LoginSignIn> {
                                   color: Colors.black),
                               decoration: InputDecoration(
                                 hintText: "cin",
+                                
                                 hintStyle: TextStyle(
                                     fontFamily: "WorkSansSemiBold",
                                     fontSize: 17.0),

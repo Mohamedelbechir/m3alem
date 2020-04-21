@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:m3alem/models/utilisateur.dart';
+import 'package:m3alem/models/freezed_classes.dart';
 
 abstract class AuthentificationEvent extends Equatable {
   AuthentificationEvent([List props = const []]) : super(props);
@@ -35,6 +35,8 @@ class AccountIncomplet extends AuthentificationEvent {
   String toString() => "CountIncomplet";
 }
 class AccountCompleted extends AuthentificationEvent {
+  final Utilisateur utilisateur;
+  AccountCompleted({@required this.utilisateur}) : super([utilisateur]);
   @override
   String toString() => "AccountCompleted";
 }
