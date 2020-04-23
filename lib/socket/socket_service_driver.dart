@@ -7,12 +7,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 class SocketServiceDriver extends SocketService {
   dynamic _driverUnsubscribeWait;
   dynamic _driverUnsubscribeWaitPassager;
-  SocketServiceDriver({
-    OnSocketSuccess onSuccess,
-    OnSocketResponse onError,
-    errorSocket(dynamic value),
-  }) : super(onSuccess: onSuccess, onError: onError, errorSocket: errorSocket);
-
+ 
   driverSubscribForWait({OnSocketCourseResponse callback}) {
     _driverUnsubscribeWait = client.subscribe(
       destination: "/course/driver-waiting",

@@ -1,4 +1,3 @@
-
 import 'package:m3alem/models/freezed_classes.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
@@ -10,16 +9,18 @@ typedef OnSocketCourseResponse = Function(Course frame);
 
 abstract class SocketService {
   StompClient _client;
+  bool _hasInit = false;
   final _headers = {
     "content-type": "application/json",
     "accept": "application/json",
   };
 
-  SocketService({
+  initSocket({
     OnSocketSuccess onSuccess,
     OnSocketResponse onError,
     errorSocket(dynamic value),
   }) {
+    _hasInit = true;
     reset();
     _client = StompClient(
       config: StompConfig(
@@ -34,7 +35,8 @@ abstract class SocketService {
         //onWebSocketError: errorSocket,
       ),
     );
-    /* ouvir la connexion */
+    // ouvrir la connexion
+    activate();
   }
 
   activate() {
@@ -56,4 +58,5 @@ abstract class SocketService {
   }
 
   StompClient get client => _client;
+  bool get hastInit => _hasInit;
 }

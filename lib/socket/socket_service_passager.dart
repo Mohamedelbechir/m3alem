@@ -2,21 +2,19 @@ import 'dart:convert';
 
 import 'package:m3alem/models/freezed_classes.dart';
 import 'package:m3alem/socket/socket.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketServicePassager extends SocketService {
   dynamic _passagerUnsubscribeWaitDriver;
 
-  SocketServicePassager({
-    OnSocketSuccess onSuccess,
-    OnSocketResponse onError,
-    errorSocket(dynamic value),
-  }) : super(onSuccess: onSuccess, onError: onError, errorSocket: errorSocket);
-
-  passagerSendRequest({Course course, OnSocketResponse callback}) {
+  passagerSendRequest({Course course, OnSocketCourseResponse callback}) {
     /* pour être notifier en cas d'acceptation */
     _passagerUnsubscribeWaitDriver = client.subscribe(
       destination: "/course/accepted/${course.idPassager}",
-      callback: callback,
+      callback: (StompFrame frame) {
+        final course = Course.fromJson(json.decode(frame.body));
+        callback(course);
+      },
     );
     /* Faire la commande */
     client.send(

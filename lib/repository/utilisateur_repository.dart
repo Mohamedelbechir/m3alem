@@ -42,6 +42,26 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
     }
   }
 
+  Future<Utilisateur> getByCin(int cin) async {
+    try {
+      final response = await http.get('$serverAdresse/utilisateurs/$cin');
+
+      if (response.statusCode < 200 ||
+          response.statusCode > 400 ||
+          json == null) {
+        // throw new Exception("Error while fetching data");
+        return null;
+      }
+      Map<String, dynamic> data = json.decode(response.body);
+      Utilisateur utilisateur = Utilisateur.fromJson(data);
+      return utilisateur;
+
+      //return listUser.map((model) => User.fromJson(model)).toList().first;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<Utilisateur> add(Utilisateur utilisateur) async {
     try {
       final response = await http.post(
@@ -187,5 +207,5 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
     } catch (e) {
       return false;
     }
-}
+  }
 }

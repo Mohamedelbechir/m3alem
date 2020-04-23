@@ -15,24 +15,7 @@ class LongPress extends PassagerMapEvent {
   List get props => [this.latLng];
 }
 
-class CommanderCourse extends PassagerMapEvent {
-  final LatLng toLocation;
-  final LatLng fromLocation;
-  final String toText;
-  final String fromText;
 
-  CommanderCourse({
-    this.toLocation,
-    this.fromLocation,
-    this.toText,
-    this.fromText,
-  });
-  @override
-  String toString() => "CommanderCourse";
-
-  @override
-  List get props => [toLocation, fromLocation, toText, fromText];
-}
 
 class PassagerOnLineOk extends PassagerMapEvent {
   @override

@@ -91,9 +91,7 @@ class MyApp extends StatelessWidget {
           RepositoryProvider<UtilisateurRepository>(
             create: (context) => UtilisateurRepository(),
           ),
-          /*  RepositoryProvider<PatientRepositorySql>(
-            builder: (context) => PatientRepositorySql(),
-          ), */
+        
         ],
         child: widget,
       ),

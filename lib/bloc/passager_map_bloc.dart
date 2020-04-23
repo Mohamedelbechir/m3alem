@@ -21,12 +21,11 @@ part 'passager_map_event.dart';
 part 'passager_map_state.dart';
 
 class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
-  CourseRespository _courseRespository;
   AuthentificationBloc _authentificationBloc;
 
   Location _location = new Location();
 
-  GoogleMapServices _googleMapServices = GoogleMapServices();
+  GoogleMapServices _googleMapServices;
 
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
@@ -37,10 +36,9 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
 
   BitmapDescriptor _destinationIcon;
   SocketServicePassager _socket;
-  Course _course;
   PassagerMapBloc({
-    @required CourseRespository courseRespository,
     @required AuthentificationBloc authentificationBloc,
+    @required GoogleMapServices googleMapServices,
   }) {
     /*  _location.onLocationChanged.listen((LocationData currentLocation) {
       _setCurrentLocation(
@@ -48,19 +46,22 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
         longitude: currentLocation.longitude,
       );
     });*/
-    _courseRespository = courseRespository;
+
     _authentificationBloc = authentificationBloc;
+    _googleMapServices = googleMapServices;
+
     _initSocket();
   }
   _initSocket() {
-    _socket = new SocketServicePassager(
-      onSuccess: (_, __) {
-        add(PassagerOnLineOk());
-      },
-      errorSocket: (_) {
-        add(PassagerOnLineKo());
-      },
-    );
+    if (!_socket.hastInit)
+      _socket.initSocket(
+        onSuccess: (_, __) {
+          add(PassagerOnLineOk());
+        },
+        errorSocket: (_) {
+          add(PassagerOnLineKo());
+        },
+      );
   }
 
   LocationData _locationData;
@@ -73,32 +74,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
   ) async* {
     if (event is DisplayPassagerMap)
       yield* _mapDisplayPassagerMapToState(event: event);
-    else if (event is LongPress)
-      yield* _mapLongPressToState(event);
-    else if (event is CommanderCourse) {
-      yield* _mapCommanderCourseToState(event);
-    }
-  }
-
-  Stream<PassagerMapState> _mapCommanderCourseToState(
-      CommanderCourse event) async* {
-    var randomizer = Random();
-    double distance = randomizer.nextInt(10).toDouble();
-    final prix = await _courseRespository.getPrixCourse(distance);
-    if (_course == null)
-      _course = Course(
-        depart: event.fromText,
-        arrivee: event.toText,
-        dateCourse: DateTime.now(),
-        distance: distance,
-        prixCourse: prix,
-        idPassager: _currentUser.cin,
-      );
-
-      _socket.passagerSendRequest(_course);
-    yield (state as PassagerMapLoaded).copyWith(
-      isLoading: true,
-    );
+    else if (event is LongPress) yield* _mapLongPressToState(event);
   }
 
   Stream<PassagerMapState> _mapLongPressToState(LongPress event) async* {

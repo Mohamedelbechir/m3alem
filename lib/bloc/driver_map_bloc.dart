@@ -35,17 +35,7 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
     _authentificationBloc = authentificationBloc;
     //  _socketDriverService = SocketDriverService();
   }
-  _initSocket() {
-    _socket = SocketServiceDriver(onSuccess: (client, frame) {
-      this.add(DriverWaiting());
-    }, onError: (frame) {
-      this.add(DriverWaitingFail());
-    }, errorSocket: (value) {
-      this.add(DriverWaitingFail());
-    });
-    _socket.activate();
-  }
-
+  
   @override
   DriverMapState get initialState => DriverMapInitial();
 
@@ -90,7 +80,7 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
     _authentificationBloc
         .setCurrentUSer(_currentUser.copyWith(isOnLine: event.isOnLine));
 
-    if (_socket == null) _initSocket();
+   // if (_socket == null) _initSocket();
 
     if (event.isOnLine) {
       _socket.driverSubscribForWait(
@@ -101,7 +91,7 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
         },
       );
     } else
-      _socket.driverUnsubscribeForWait();
+     // _socket.driverUnsubscribeForWait();
 
     yield (state as DriverMapLoaded).copyWith(isOnLine: result);
   
