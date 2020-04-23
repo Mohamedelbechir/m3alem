@@ -151,13 +151,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
 
   GoogleMapServices get googleMapServices => this._googleMapServices;
 
-  Future<List<Place>> getSuggestions(String pattern) async {
-    return await _googleMapServices.getSuggestions(pattern);
-  }
 
-  Future<PlaceDetail> getPlaceDetail(String placeId) async {
-    return await _googleMapServices.getPlaceDetail(placeId);
-  }
 
   Future<LatLng> _getLocation() async {
     bool _serviceEnabled = await _location.serviceEnabled();

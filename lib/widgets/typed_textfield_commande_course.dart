@@ -143,7 +143,8 @@ class _MyTypedTextFieldCommanderState extends State<MyTypedTextFieldCommander> {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         color: Colors.black,
                         onPressed: () {
-                          _bloc.add(CommanderCourse(
+                          context
+                            .bloc<CommanderCourseBloc>().add(CommanderCourse(
                             fromLocation: state.currentLatLng,
                             toLocation: LatLng(
                               _toPlaceDetail.lat,

@@ -56,7 +56,6 @@ class UtilisateurRepository extends IRepositoryApi<Utilisateur> {
       Utilisateur utilisateur = Utilisateur.fromJson(data);
       return utilisateur;
 
-      //return listUser.map((model) => User.fromJson(model)).toList().first;
     } catch (e) {
       return null;
     }

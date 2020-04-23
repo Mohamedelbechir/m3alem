@@ -9,6 +9,7 @@ class CommanderCourseInitial extends CommanderCourseState {
   List<Object> get props => [];
 }
 class DisplayedCommander extends CommanderCourseState {
+  
   @override
   List<Object> get props => [];
 }
