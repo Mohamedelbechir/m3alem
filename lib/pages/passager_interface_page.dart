@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m3alem/bloc/authentification_bloc.dart';
 import 'package:m3alem/bloc/commander_course_bloc.dart';
 import 'package:m3alem/bloc/passager_map_bloc.dart';
+import 'package:m3alem/bloc/sugestion_bloc.dart';
 import 'package:m3alem/google_map_services/google_map_service.dart';
 import 'package:m3alem/m3alem_keys.dart';
 import 'package:m3alem/pages/passager_history_page.dart';
 import 'package:m3alem/pages/passager_map_page.dart';
 import 'package:m3alem/pages/passager_setting_page.dart';
 import 'package:m3alem/repository/course_repository.dart';
+import 'package:m3alem/repository/utilisateur_repository.dart';
 import 'package:m3alem/socket/socket_service_passager.dart';
 import 'package:m3alem/widgets/bottom_navigation_custom.dart';
 
@@ -24,11 +26,20 @@ class _PassagerInterfacePageState extends State<PassagerInterfacePage> {
   void initState() {
     SocketServicePassager _socket = SocketServicePassager();
     GoogleMapServices _services = GoogleMapServices();
+    final blocS = SugestionBloc();
+    
     final blocMap = PassagerMapBloc(
+      utilisateurRepository: context.repository<UtilisateurRepository>(),
+      courseRespository: context.repository<CourseRespository>(),
       googleMapServices: _services,
       authentificationBloc: context.bloc<AuthentificationBloc>(),
+      sugestionBloc: blocS,
+      socket: _socket,
     );
+
     final blocCommander = CommanderCourseBloc(
+      utilisateurRepository: context.repository<UtilisateurRepository>(),
+      sugestionBloc: blocS,
       passagerMapBloc: blocMap,
       googleMapServices: _services,
       courseRespository: context.repository<CourseRespository>(),
@@ -40,10 +51,13 @@ class _PassagerInterfacePageState extends State<PassagerInterfacePage> {
       MultiBlocProvider(
         providers: [
           BlocProvider<PassagerMapBloc>.value(
-            value: blocMap,
+            value: blocMap..add(DisplayPassagerMap()),
           ),
           BlocProvider<CommanderCourseBloc>.value(
-            value: blocCommander,
+            value: blocCommander..add(DisplayCommandeCourse()),
+          ),
+          BlocProvider<SugestionBloc>.value(
+            value: blocS,
           ),
         ],
         //  create: (context) => PassagerMapBloc()..add(DisplayPassagerMap()),

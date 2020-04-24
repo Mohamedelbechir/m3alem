@@ -7,18 +7,26 @@ import 'package:http/http.dart' as http;
 import 'package:m3alem/m3alem_keys.dart';
 import 'package:m3alem/modelView/place_model.dart';
 import 'package:m3alem/styles/uuid.dart';
+import 'package:geolocator/geolocator.dart';
 
 class GoogleMapServices {
   GoogleMapPolyline googleMapPolyline =
-      new GoogleMapPolyline(apiKey: AppM3alemKeys.apiKey1);
+      new GoogleMapPolyline(apiKey: AppM3alemKeys.apiKey2);
   GoogleDistanceMatrix _googleDistanceMatrix =
-      GoogleDistanceMatrix(apiKey: AppM3alemKeys.apiKey1);
+      GoogleDistanceMatrix(apiKey: AppM3alemKeys.apiKey2);
 
   final _uuid = Uuid();
 
   String get _apiKey => AppM3alemKeys.apiKey;
+  String get _apiKeySecond => AppM3alemKeys.apiKey2;
 
   String get sessionToken => _uuid.generateV4();
+
+  Future<double> getDistanceFromLatLng(LatLng from, LatLng to) async {
+    final double distance = await Geolocator().distanceBetween(
+        from.latitude, from.longitude, to.latitude, to.longitude);
+    return distance;
+  }
 
   Future<List<Place>> getSuggestions(String query) async {
     final String baseUrl =
@@ -27,10 +35,10 @@ class GoogleMapServices {
     String url =
         '$baseUrl?input=$query&key=$_apiKey&type=$type&language=en&components=country:ng&sessiontoken=$sessionToken';
     String url1 =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&language=fr&key=$_apiKey&sessiontoken=$sessionToken';
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&language=fr&key=$_apiKeySecond&sessiontoken=$sessionToken';
     //print('Autocomplete(sessionToken): $sessionToken');
 
-    final http.Response response = await http.get(url1);
+    final  response = await http.get(url1);
     final responseData = json.decode(response.body);
     final predictions = responseData['predictions'];
 
@@ -44,14 +52,31 @@ class GoogleMapServices {
     return suggestions;
   }
 
+  Future<String> getLocationNameByLatLng({LatLng latLng}) async {
+    try {
+      final String baseUrl =
+          'https://maps.googleapis.com/maps/api/geocode/json';
+      final String url =
+          "$baseUrl?latlng=${latLng.latitude},${latLng.longitude}&key=$_apiKeySecond";
+
+      final  response = await http.get(url);
+      final responseData = json.decode(response.body);
+      final result = responseData['results'][0]["formatted_address"] as String;
+
+      return result;
+    } catch (e) {
+      return "${latLng.latitude},${latLng.longitude}";
+    }
+  }
+
   Future<PlaceDetail> getPlaceDetail(String placeId) async {
     final String baseUrl =
         'https://maps.googleapis.com/maps/api/place/details/json';
     String url =
-        '$baseUrl?key=$_apiKey&place_id=$placeId&language=en&sessiontoken=$sessionToken';
+        '$baseUrl?key=$_apiKeySecond&place_id=$placeId&language=en&sessiontoken=$sessionToken';
 
     print('Place Detail(sessionToken): $sessionToken');
-    final http.Response response = await http.get(url);
+    final response = await http.get(url);
     final responseData = json.decode(response.body);
     final result = responseData['result'];
 
@@ -81,7 +106,7 @@ class GoogleMapServices {
       origin,
       destination,
       travelMode: TravelMode.driving,
-    ); 
+    );
     return distanceResponse;
   }
 

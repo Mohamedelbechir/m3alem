@@ -14,5 +14,5 @@ class AppM3alemKeys {
   static final passagerSetting = const Key('__passagerSetting__');
   
   static final apiKey = 'AIzaSyD2YXAzLA9aq0FraUVUEJyWLJav1HOiLWw';
-  static final apiKey1 = 'AIzaSyCDJa_D_Ewcm8wE8OAH6uBQttSxALdoNUI';
+  static final apiKey2 = 'AIzaSyCDJa_D_Ewcm8wE8OAH6uBQttSxALdoNUI';
 }

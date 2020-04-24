@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum TypeMenu { driver, passager }
 
-class CustumBottomNavigation extends StatelessWidget {
+class CustumBottomNavigation extends StatelessWidget { 
   final ValueChanged<int> onSelectNav;
   final int currentIndex;
   final TypeMenu typeMenu;

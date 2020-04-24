@@ -16,6 +16,7 @@ import 'package:m3alem/modelView/place_model.dart';
 import 'package:m3alem/pages/map_clic.dart';
 import 'package:m3alem/widgets/loading_indicator.dart';
 import 'package:m3alem/widgets/loading_overlay.dart';
+import 'package:m3alem/widgets/tag.dart';
 import 'package:m3alem/widgets/typed_textfield_commande_course.dart';
 
 class PassagerMapPage extends StatefulWidget {
@@ -26,109 +27,22 @@ class PassagerMapPage extends StatefulWidget {
 }
 
 class _PassagerMapPageState extends State<PassagerMapPage> {
-  final MarkerId _myLocationMarkeId = MarkerId("__myLocation__");
-  Set<Marker> _markers = {};
-  BitmapDescriptor _myLocationIcon;
-
-  LatLng _selectedPosition;
-  LatLng _currentLatLng;
-  CameraPosition _kCurrent;
   GoogleMapController _mapController;
+  TextEditingController _toLocationController = new TextEditingController();
+  TextEditingController _fromLocationController = new TextEditingController();
 
-  Location location = new Location();
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
-  Marker currentPositionMarker;
-
-  Future<Marker> _getCurrentPositionMarker(context, {LatLng latLng}) async {
-    MarkerId markerId = MarkerId("currentPosition");
-    BitmapDescriptor icon = await _getCurrentLocationIcon(context);
-    Marker marker = Marker(
-      markerId: markerId,
-      position: _currentLatLng,
-      infoWindow: InfoWindow(title: "Depart", snippet: '*'),
-      onTap: () {
-        _onMarkerTapped(markerId);
-      },
-      onDragEnd: (LatLng position) {
-        _onMarkerDragEnd(markerId, position);
-      },
-      icon: icon,
-    );
-    // marker.copyWith(positionParam: )c
-    return marker;
-  }
-
-  void _onMarkerDragEnd(markerId, position) {}
-  void _onMarkerTapped(markerId) {}
-
-  Future<BitmapDescriptor> _getCurrentLocationIcon(BuildContext context) async {
-    final Completer<BitmapDescriptor> bitmapIcon =
-        Completer<BitmapDescriptor>();
-    final ImageConfiguration config = createLocalImageConfiguration(context);
-
-    const AssetImage('assets/img/mylocation.png')
-        .resolve(config)
-        .addListener(ImageStreamListener((ImageInfo image, bool sync) async {
-      final ByteData bytes =
-          await image.image.toByteData(format: ImageByteFormat.png);
-      final BitmapDescriptor bitmap =
-          BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
-      bitmapIcon.complete(bitmap);
-    }));
-
-    return await bitmapIcon.future;
-  }
+  PlaceDetail _fromPlaceDetail;
+  PlaceDetail _toPlaceDetail;
 
   @override
   initState() {
     super.initState();
-    _currentLatLng = LatLng(37.42796133580664, -122.085749655962);
-    _kCurrent = CameraPosition(target: _currentLatLng, zoom: 14.4746);
-    _markers.add(Marker(
-      markerId: _myLocationMarkeId,
-      infoWindow: InfoWindow(
-        title: "Position actuelle",
-      ),
-      onTap: () {},
-    ));
-    /* BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio:2.5 ,size: Size(5, 5)),
-            'assets/img/mylocation.png')
-        .then((onValue) {
-      //_myLocationIcon = onValue;
-      setState(() {
-        _markers.add(Marker(
-          markerId: _myLocationMarkeId,
-          //position: LatLng(myLocation.latitude, myLocation.longitude),
-          icon: onValue,
-          infoWindow: InfoWindow(
-            title: "Ma position",
-          ),
-          onTap: () {},
-        ));
-      });
-    });*/
-
-    /* WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getCurrentPositionMarker(context).then((value) {
-        setState(() {
-          currentPositionMarker = value;
-        });
-      });
-    }); */
-
-    /*  BitmapDescriptor icon;
-    _getCurrentLocationIcon(context).then((value) {
-      setState(() {
-        icon = value;
-        currentPositionMarker = currentPositionMarker.copyWith(iconParam: icon);
-      });
-    }); */
   }
 
   @override
   Widget build(BuildContext context) {
+    final _blocPassagerMap = context.bloc<PassagerMapBloc>();
+
     CameraPosition _getCameraPosition(
         {LatLng latLng =
             const LatLng(37.43296265331129, -122.08832357078792)}) {
@@ -146,31 +60,215 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
         body: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            LoadingOverlay(
-              isLoading: false,
-              child: BlocBuilder<PassagerMapBloc, PassagerMapState>(
-                builder: (context, state) {
-                  if (state is PassagerMapLoaded && _markers.isNotEmpty) {
-                    return GoogleMap(
-                      initialCameraPosition:
-                          _getCameraPosition(latLng: state.currentLatLng),
-                      myLocationEnabled: true,
-                      compassEnabled: true,
-                      onMapCreated: _onMapCreated,
-                      markers: state.markers,
-                      polylines: state.polyLines,
-                      onLongPress: _onLongPress,
-                    );
-                  }
-                  if (state is PassagerMapLoading) {
-                    return LoadingIndicator(
-                        key: AppM3alemKeys.statsLoadingIndicator);
-                  }
-                  return Container();
-                },
-              ),
+            BlocBuilder<PassagerMapBloc, PassagerMapState>(
+              builder: (context, state) {
+                if (state is PassagerMapLoaded) {
+                  _fromLocationController.text = state.fromTxt;
+                  _toLocationController.text = state.toTxt;
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: <Widget>[
+                      LoadingOverlay(
+                        isLoading: false,
+                        child: GoogleMap(
+                          initialCameraPosition:
+                              _getCameraPosition(latLng: state.from),
+                          myLocationEnabled: true,
+                          compassEnabled: true,
+                          onMapCreated: _onMapCreated,
+                          markers: state.markers,
+                          polylines: state.polyLines,
+                          onLongPress: (latLng) =>
+                              _blocPassagerMap.add(LongPress(latLng: latLng)),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 5,
+                        left: 5,
+                        right: 5,
+                        child: Card(
+                          elevation: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Form(
+                                child: Column(
+                              children: <Widget>[
+                                TypeAheadField<Place>(
+                                  noItemsFoundBuilder: (context) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: Text(
+                                      "Aucun endroit correspondant",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).disabledColor,
+                                          fontSize: 18.0),
+                                    ),
+                                  ),
+                                  direction: AxisDirection.up,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    controller: _fromLocationController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Depart',
+                                      icon: Icon(Icons.location_on,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  itemBuilder:
+                                      (BuildContext context, suggestion) {
+                                    return ListTile(
+                                      leading: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(
+                                          Icons.location_on,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        suggestion.description,
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) async {
+                                    _fromLocationController.text =
+                                        suggestion.description;
+                                    _fromPlaceDetail = await _blocPassagerMap
+                                        .getPlaceDetail(suggestion.placeId);
+                                    _blocPassagerMap.add(LongPress(
+                                      latLng: LatLng(_fromPlaceDetail.lat,
+                                          _fromPlaceDetail.lng),
+                                      source: MarkerDragSourse.from,
+                                    ));
+                                  },
+                                  suggestionsCallback: (String pattern) async {
+                                    return await _blocPassagerMap
+                                        .getSuggestions(pattern);
+                                  },
+                                ),
+                                TypeAheadFormField<Place>(
+                                  noItemsFoundBuilder: (context) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: Text(
+                                      "Aucun endroit correspondant",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).disabledColor,
+                                          fontSize: 18.0),
+                                    ),
+                                  ),
+                                  direction: AxisDirection.up,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    controller: _toLocationController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Destination',
+                                      icon: Icon(Icons.assistant_photo,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  itemBuilder:
+                                      (BuildContext context, suggestion) {
+                                    return ListTile(
+                                      leading: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(
+                                          Icons.location_on,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        suggestion.description,
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) async {
+                                    _toLocationController.text =
+                                        suggestion.description;
+                                    _toPlaceDetail = await _blocPassagerMap
+                                        .getPlaceDetail(suggestion.placeId);
+
+                                    _blocPassagerMap.add(LongPress(
+                                      latLng: LatLng(_toPlaceDetail.lat,
+                                          _toPlaceDetail.lng),
+                                      source: MarkerDragSourse.to,
+                                    ));
+
+                                    // _moveCamera(_fromPlaceDetail, _toPlaceDetail);
+                                  },
+                                  suggestionsCallback: (String pattern) async {
+                                    return await context
+                                        .bloc<PassagerMapBloc>()
+                                        .getSuggestions(pattern);
+                                  },
+                                ),
+                                 SizedBox(
+                                  height: 10,
+                                ),
+                                state.distance != null
+                                    ? Tag(text:'${arrondir(state.distance.toString())} km de distance')
+                                    : Container(),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: IgnorePointer(
+                                    ignoring: (_toLocationController
+                                            .text.isEmpty ||
+                                        _fromLocationController.text.isEmpty),
+                                    child: RaisedButton(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      color: Colors.black,
+                                      onPressed: () {
+                                        /* _blocPassagerMap.add(CommanderCourse(
+                                          fromLocation: state.from,
+                                          toLocation: LatLng(
+                                            _toPlaceDetail.lat,
+                                            _toPlaceDetail.lng,
+                                          ),
+                                          fromText:
+                                              _fromLocationController.text,
+                                          toText: _toLocationController.text,
+                                        ));*/
+                                      },
+                                      child: Text(
+                                        'Commander',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                if (state is PassagerMapLoading) {
+                  return LoadingIndicator(
+                      key: AppM3alemKeys.statsLoadingIndicator);
+                }
+                return Container();
+              },
             ),
-            MyTypedTextFieldCommander(),
             BlocBuilder<SugestionBloc, SugestionState>(
               builder: (context, state) {
                 if (state is SugestedDrivers) {
@@ -200,17 +298,14 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
         ),
       ),
     );
-  }
 
-  void _onLongPress(LatLng latLng) {
-    this._selectedPosition = latLng;
-    context.bloc<PassagerMapBloc>().add(LongPress(latLng: latLng));
+    //MyTypedTextFieldCommander(),
   }
-
-  void _onTap(LatLng latLng) {
-    print(latLng);
-  }
-
+String arrondir(String valeur){
+  final vls = valeur.split('.');
+  final res = vls[0] +","+ vls[1].substring(0,2);
+  return res;
+}
   void _onMapCreated(GoogleMapController controller) async {
     setState(() {
       _mapController = controller;

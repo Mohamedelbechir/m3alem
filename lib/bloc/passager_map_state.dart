@@ -10,49 +10,64 @@ class PassagerMapInitial extends PassagerMapState {
 }
 
 class PassagerMapLoaded extends PassagerMapState {
-  final LatLng currentLatLng;
+  final LatLng from;
   final LatLng toLatLng;
   final Set<Marker> markers;
   final Set<Polyline> polyLines;
   final String fromTxt;
   final String toTxt;
   final bool isLoading;
+  final double distance;
 
   PassagerMapLoaded({
-    this.currentLatLng,
+    this.from,
     this.markers,
     this.polyLines,
     this.toLatLng,
     this.fromTxt,
     this.toTxt,
     this.isLoading = false,
+    this.distance,
   });
 
   @override
   List get props => [
-        this.currentLatLng,
+        this.from,
         this.markers,
         this.polyLines,
+        this.toLatLng,
+        this.fromTxt,
+        this.toTxt,
         this.isLoading,
+        this.distance,
       ];
 
   PassagerMapLoaded copyWith({
-    LatLng currentLatLng,
+    LatLng from,
+    LatLng toLatLng,
     Set<Marker> markers,
     Set<Polyline> polyLines,
+    String fromTxt,
+    String toTxt,
     bool isLoading,
+    double distance,
   }) {
     return PassagerMapLoaded(
-      currentLatLng: currentLatLng ?? this.currentLatLng,
+      from: from ?? this.from,
+      toLatLng: toLatLng ?? this.toLatLng,
       markers: markers ?? this.markers,
       polyLines: polyLines ?? this.polyLines,
+      fromTxt: fromTxt ?? this.fromTxt,
+      toTxt: toTxt ?? this.toTxt,
       isLoading: isLoading ?? this.isLoading,
+      distance: distance ?? this.distance,
     );
   }
 
   @override
-  String toString() =>
-      'PassagerMapLoaded(currentLatLng: $currentLatLng, markers: $markers, polyLines: $polyLines)';
+  String toString() {
+    return 'PassagerMapLoaded(from: $from, toLatLng: $toLatLng, markers: $markers, polyLines: $polyLines, fromTxt: $fromTxt, toTxt: $toTxt, isLoading: $isLoading, distance: $distance)';
+  }
 }
 
 class PassagerMapUpdated extends PassagerMapState {
@@ -68,5 +83,3 @@ class PassagerMapLoading extends PassagerMapState {
     return "PassagerMapLoading";
   }
 }
-
-

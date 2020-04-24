@@ -36,13 +36,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           yield LoginFailure(error: 'Login ou mot de passe incorrect');
         else if (utilisateur.typeUtilisateur == TypeUtilisateur.passager) {
           authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
-        }
-
-        if (utilisateur.etatInscription == EtatInscription.enAttenteInscription)
-          authentificationBloc.add(AccountIncomplet(utilisateur: utilisateur));
-        else {
-          authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
-          yield LoginInitial();
+        } else {
+          // c'est un chauffeur
+          if (utilisateur.etatInscription ==
+              EtatInscription.enAttenteInscription)
+            authentificationBloc
+                .add(AccountIncomplet(utilisateur: utilisateur));
+          else {
+            authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
+            yield LoginInitial();
+          }
         }
       } catch (error) {
         yield LoginFailure(error: error.toString());

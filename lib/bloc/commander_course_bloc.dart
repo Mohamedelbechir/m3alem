@@ -57,9 +57,28 @@ class CommanderCourseBloc
   ) async* {
     if (event is CommanderCourse) {
       yield* _mapCommanderCourseToState(event);
+    } else if (event is DisplayCommandeCourse) {
+      yield* _mapDisplayCommandeCourseToState(event);
+    } else if (event is UpdateFromMap) {
+      yield* _mapUpdateFromMapToState(event);
     } else if (event is SelectDriver) {
       yield* _mapSelectDriverToState(event);
     }
+  }
+
+  Stream<CommanderCourseState> _mapUpdateFromMapToState(
+      UpdateFromMap event) async* {
+    yield CommanderCourseDisplayed(
+      from: event.from,
+      to: event.to,
+      fromText: event.fromText,
+      toText: event.toText,
+    );
+  }
+
+  Stream<CommanderCourseState> _mapDisplayCommandeCourseToState(
+      DisplayCommandeCourse event) async* {
+    yield CommanderCourseDisplayed();
   }
 
   Stream<CommanderCourseState> _mapSelectDriverToState(
@@ -98,4 +117,5 @@ class CommanderCourseBloc
   }
 
   Utilisateur get _currentUser => _authentificationBloc.currentUser;
+  LatLng get currentPosition => _passagerMapBloc.currentPosition;
 }

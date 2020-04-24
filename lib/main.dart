@@ -8,6 +8,7 @@ import 'package:m3alem/pages/passager_interface_page.dart';
 import 'package:m3alem/pages/complete_dossier.dart';
 import 'package:m3alem/pages/driver_interface.dart';
 import 'package:m3alem/pages/login_page.dart';
+import 'package:m3alem/repository/course_repository.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
 
 import 'widgets/loading_indicator.dart';
@@ -90,6 +91,10 @@ class MyApp extends StatelessWidget {
         providers: [
           RepositoryProvider<UtilisateurRepository>(
             create: (context) => UtilisateurRepository(),
+          ),
+        
+          RepositoryProvider<CourseRespository>(
+            create: (context) => CourseRespository(),
           ),
         
         ],

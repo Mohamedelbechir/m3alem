@@ -17,11 +17,15 @@ class _MyTypedTextFieldCommanderState extends State<MyTypedTextFieldCommander> {
 
   PlaceDetail _fromPlaceDetail;
   PlaceDetail _toPlaceDetail;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CommanderCourseBloc, CommanderCourseState>(
       builder: (context, state) {
-        if (state is DisplayedCommander) {
+        if (state is CommanderCourseDisplayed) {
+          _toLocationController.text = state.toText;
+          _fromLocationController.text = state.fromText;
+
           return Positioned(
             bottom: 5,
             left: 5,
@@ -96,7 +100,7 @@ class _MyTypedTextFieldCommanderState extends State<MyTypedTextFieldCommander> {
                       ),
                       direction: AxisDirection.up,
                       textFieldConfiguration: TextFieldConfiguration(
-                        controller: _fromLocationController,
+                        controller: _toLocationController,
                         decoration: InputDecoration(
                           labelText: 'Destination',
                           icon:
@@ -143,9 +147,10 @@ class _MyTypedTextFieldCommanderState extends State<MyTypedTextFieldCommander> {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         color: Colors.black,
                         onPressed: () {
-                          context
-                            .bloc<CommanderCourseBloc>().add(CommanderCourse(
-                            fromLocation: state.currentLatLng,
+                          final _bloc = context.bloc<CommanderCourseBloc>();
+
+                          _bloc.add(CommanderCourse(
+                            fromLocation: _bloc.currentPosition,
                             toLocation: LatLng(
                               _toPlaceDetail.lat,
                               _toPlaceDetail.lng,
