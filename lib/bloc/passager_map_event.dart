@@ -35,10 +35,10 @@ class CommanderCourse extends PassagerMapEvent {
   final String fromText;
 
   CommanderCourse({
-    this.toLocation,
-    this.fromLocation,
-    this.toText,
-    this.fromText,
+   @required this.toLocation,
+   @required this.fromLocation,
+   @required this.toText,
+   @required this.fromText,
   });
   @override
   String toString() => "CommanderCourse";

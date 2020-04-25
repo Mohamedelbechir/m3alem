@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:m3alem/models/freezed_classes.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
+
+
 
 typedef OnSocketSuccess = Function(StompClient client, StompFrame frame);
 typedef OnSocketResponse = Function(StompFrame frame);

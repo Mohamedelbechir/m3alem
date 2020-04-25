@@ -7,10 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:m3alem/bloc/authentification_bloc.dart';
 import 'package:m3alem/models/freezed_classes.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
-import 'package:m3alem/socket/socket.dart';
-import 'package:m3alem/socket/socket_service_driver.dart';
 import 'package:m3alem/utils/phone_service.dart';
-import 'package:stomp_dart_client/stomp_frame.dart';
+import 'package:m3alem/socket/socket_service_driver.dart';
 
 part 'driver_map_event.dart';
 part 'driver_map_state.dart';
@@ -22,20 +20,17 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
 
   BitmapDescriptor _iconCar;
 
-  UtilisateurRepository _utilisateurRepository;
-  AuthentificationBloc _authentificationBloc;
+  UtilisateurRepository utilisateurRepository;
+  AuthentificationBloc authentificationBloc;
 
-  // SocketDriverService _socketDriverService;
-  SocketServiceDriver _socket;
+  // SocketDriverService socketDriverService;
+  SocketServiceDriver socket ;
   DriverMapBloc({
-    @required UtilisateurRepository utilisateurRepository,
-    @required AuthentificationBloc authentificationBloc,
-  }) : assert(utilisateurRepository != null) {
-    _utilisateurRepository = utilisateurRepository;
-    _authentificationBloc = authentificationBloc;
-    //  _socketDriverService = SocketDriverService();
-  }
-  
+    @required this.utilisateurRepository,
+    @required this.authentificationBloc,
+    @required this.socket,
+  });
+
   @override
   DriverMapState get initialState => DriverMapInitial();
 
@@ -49,8 +44,7 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
       yield* _mapSwichDriverStateToState(event);
     else if (event is DriverWaiting) {
       print("je suis en attente");
-    }
-    else if(event is DriverOnLine){
+    } else if (event is DriverOnLine) {
       print("je suis en ligne");
     }
   }
@@ -73,28 +67,26 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
 
   Stream<DriverMapState> _mapSwichDriverStateToState(
       SwichDriverState event) async* {
-    final result = await _utilisateurRepository.setOnline(
-      _authentificationBloc.currentUser.cin,
+    final result = await utilisateurRepository.setOnline(
+      authentificationBloc.currentUser.cin,
       event.isOnLine,
     );
-    _authentificationBloc
+    authentificationBloc
         .setCurrentUSer(_currentUser.copyWith(isOnLine: event.isOnLine));
 
-   // if (_socket == null) _initSocket();
+    // if (socket == null) _initSocket();
 
     if (event.isOnLine) {
-      _socket.driverSubscribForWait(
+      socket.driverSubscribForWait(
         callback: (Course course) {
           // => reception de notification de course
           add(DriverCourseNotification(course));
-         
         },
       );
     } else
-     // _socket.driverUnsubscribeForWait();
+      // socket.driverUnsubscribeForWait();
 
-    yield (state as DriverMapLoaded).copyWith(isOnLine: result);
-  
+      yield (state as DriverMapLoaded).copyWith(isOnLine: result);
   }
 
   Future<void> _updateMarkers({Marker marker}) async {
@@ -112,5 +104,5 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
     _markers.addAll(_list);
   }
 
-  Utilisateur get _currentUser => _authentificationBloc.currentUser;
+  Utilisateur get _currentUser => authentificationBloc.currentUser;
 }

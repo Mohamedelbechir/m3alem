@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:m3alem/models/freezed_classes.dart';
-import 'package:m3alem/socket/socket.dart';
+
+import 'socket.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketServiceDriver extends SocketService {

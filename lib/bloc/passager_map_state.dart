@@ -11,7 +11,7 @@ class PassagerMapInitial extends PassagerMapState {
 
 class PassagerMapLoaded extends PassagerMapState {
   final LatLng from;
-  final LatLng toLatLng;
+  final LatLng to;
   final Set<Marker> markers;
   final Set<Polyline> polyLines;
   final String fromTxt;
@@ -23,7 +23,7 @@ class PassagerMapLoaded extends PassagerMapState {
     this.from,
     this.markers,
     this.polyLines,
-    this.toLatLng,
+    this.to,
     this.fromTxt,
     this.toTxt,
     this.isLoading = false,
@@ -35,7 +35,7 @@ class PassagerMapLoaded extends PassagerMapState {
         this.from,
         this.markers,
         this.polyLines,
-        this.toLatLng,
+        this.to,
         this.fromTxt,
         this.toTxt,
         this.isLoading,
@@ -54,7 +54,7 @@ class PassagerMapLoaded extends PassagerMapState {
   }) {
     return PassagerMapLoaded(
       from: from ?? this.from,
-      toLatLng: toLatLng ?? this.toLatLng,
+      to: toLatLng ?? this.to,
       markers: markers ?? this.markers,
       polyLines: polyLines ?? this.polyLines,
       fromTxt: fromTxt ?? this.fromTxt,
@@ -66,7 +66,7 @@ class PassagerMapLoaded extends PassagerMapState {
 
   @override
   String toString() {
-    return 'PassagerMapLoaded(from: $from, toLatLng: $toLatLng, markers: $markers, polyLines: $polyLines, fromTxt: $fromTxt, toTxt: $toTxt, isLoading: $isLoading, distance: $distance)';
+    return 'PassagerMapLoaded(from: $from, toLatLng: $to, markers: $markers, polyLines: $polyLines, fromTxt: $fromTxt, toTxt: $toTxt, isLoading: $isLoading, distance: $distance)';
   }
 }
 

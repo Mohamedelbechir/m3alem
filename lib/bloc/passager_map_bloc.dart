@@ -66,6 +66,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
     if (event is DisplayPassagerMap)
       yield* _mapDisplayPassagerMapToState(event: event);
     else if (event is LongPress) yield* _mapLongPressToState(event);
+    else if (event is CommanderCourse) yield* _mapCommanderCourseToState(event);
   }
 
   Stream<PassagerMapState> _mapLongPressToState(LongPress event) async* {
@@ -101,7 +102,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
     yield PassagerMapLoaded(
       isLoading: false,
       from: _fromLatLng,
-      toLatLng: _toLatLng,
+      to: _toLatLng,
       toTxt: _toText,
       fromTxt: _fromText,
       markers: _markers,
@@ -124,7 +125,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
     // double distance = randomizer.nextInt(10).toDouble();
     double distance = _distanceCourse(_polylines.first.points);
     final prix = await courseRespository.getPrixCourse(distance);
-    if (_course == null)
+    //if (_course == null)
       _course = Course(
         depart: event.fromText,
         arrivee: event.toText,

@@ -1,3 +1,4 @@
+import 'package:m3alem/socket/socket_service_driver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m3alem/bloc/authentification_bloc.dart';
@@ -18,35 +19,44 @@ class _DriverInterfaceState extends State<DriverInterface> {
   int _currentIndex = 0;
   final navigatorKey = GlobalKey<NavigatorState>();
 
-  final _listMenu = <Widget>[
-    BlocProvider(
-      create: (context) => DriverMapBloc(
-        authentificationBloc: context.bloc<AuthentificationBloc>(),
-        utilisateurRepository: context.repository<UtilisateurRepository>(),
-      )..add(DisplayDriverMap()),
-      child: DriverMapPage(key: AppM3alemKeys.driverMap),
-    ),
-    DriverMoneyPage(key: AppM3alemKeys.driverMoney),
-    DriverSettingPage(key: AppM3alemKeys.driverSetting),
-  ];
+  List<Widget> _listMenu;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    final _socket = SocketServiceDriver();
+    _listMenu = <Widget>[
+      BlocProvider(
+        create: (context) => DriverMapBloc(
+          authentificationBloc: context.bloc<AuthentificationBloc>(),
+          utilisateurRepository: context.repository<UtilisateurRepository>(),
+          socket: _socket,
+        )..add(DisplayDriverMap()),
+        child: DriverMapPage(key: AppM3alemKeys.driverMap),
+      ),
+      DriverMoneyPage(key: AppM3alemKeys.driverMoney),
+      DriverSettingPage(key: AppM3alemKeys.driverSetting),
+    ];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         /* final isFirstRouteInCurrentTab =
-            !await _navigatorKeys[_currentNav].currentState.maybePop();
-        if (isFirstRouteInCurrentTab) {
-          // if not on the 'main' tab
-          if (_currentNav != NavItem.map) {
-            // select 'main' tab
-            _onSelectNav(NavItem.map);
-            // back button handled by app
-            return false;
-          }
-        }
-        // let system handle back button if we're on the first route
-        return isFirstRouteInCurrentTab; */
+               !await _navigatorKeys[_currentNav].currentState.maybePop();
+           if (isFirstRouteInCurrentTab) {
+             // if not on the 'main' tab
+             if (_currentNav != NavItem.map) {
+               // select 'main' tab
+               _onSelectNav(NavItem.map);
+               // back button handled by app
+               return false;
+             }
+           }
+           // let system handle back button if we're on the first route
+           return isFirstRouteInCurrentTab; */
         return null;
       },
       child: Scaffold(
@@ -62,9 +72,9 @@ class _DriverInterfaceState extends State<DriverInterface> {
 
   _onSelectNav(int navIndex) {
     /*   if (_currentIndex == navIndex) {
-      // pop to first route
-      _navigatorKeys[navIndex].currentState.popUntil((route) => route.isFirst);
-    } else { */
+         // pop to first route
+         _navigatorKeys[navIndex].currentState.popUntil((route) => route.isFirst);
+       } else { */
     setState(() {
       _currentIndex = navIndex;
     });

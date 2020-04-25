@@ -17,7 +17,6 @@ import 'package:m3alem/pages/map_clic.dart';
 import 'package:m3alem/widgets/loading_indicator.dart';
 import 'package:m3alem/widgets/loading_overlay.dart';
 import 'package:m3alem/widgets/tag.dart';
-import 'package:m3alem/widgets/typed_textfield_commande_course.dart';
 
 class PassagerMapPage extends StatefulWidget {
   PassagerMapPage({Key key}) : super(key: key);
@@ -215,42 +214,42 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
                                         .getSuggestions(pattern);
                                   },
                                 ),
-                                 SizedBox(
+                                SizedBox(
                                   height: 10,
                                 ),
                                 state.distance != null
-                                    ? Tag(text:'${arrondir(state.distance.toString())} km de distance')
+                                    ? Tag(
+                                        text:
+                                            '${arrondir(state.distance.toString())} km de distance')
                                     : Container(),
                                 SizedBox(
                                   height: 10,
                                 ),
                                 SizedBox(
                                   width: double.infinity,
-                                  child: IgnorePointer(
-                                    ignoring: (_toLocationController
-                                            .text.isEmpty ||
-                                        _fromLocationController.text.isEmpty),
-                                    child: RaisedButton(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 10),
-                                      color: Colors.black,
-                                      onPressed: () {
-                                        /* _blocPassagerMap.add(CommanderCourse(
-                                          fromLocation: state.from,
-                                          toLocation: LatLng(
-                                            _toPlaceDetail.lat,
-                                            _toPlaceDetail.lng,
-                                          ),
-                                          fromText:
-                                              _fromLocationController.text,
-                                          toText: _toLocationController.text,
-                                        ));*/
-                                      },
-                                      child: Text(
-                                        'Commander',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 20),
-                                      ),
+                                  child: RaisedButton(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    color: Colors.black,
+                                    onPressed: (_toLocationController
+                                                .text.isEmpty ||
+                                            _fromLocationController
+                                                .text.isEmpty)
+                                        ? null
+                                        : () {
+                                            _blocPassagerMap
+                                                .add(CommanderCourse(
+                                              fromLocation: state.from,
+                                              toLocation: state.to,
+                                              fromText:
+                                                  _fromLocationController.text,
+                                              toText:
+                                                  _toLocationController.text,
+                                            ));
+                                          },
+                                    child: Text(
+                                      'Commander',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
                                     ),
                                   ),
                                 )
@@ -301,11 +300,13 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
 
     //MyTypedTextFieldCommander(),
   }
-String arrondir(String valeur){
-  final vls = valeur.split('.');
-  final res = vls[0] +","+ vls[1].substring(0,2);
-  return res;
-}
+
+  String arrondir(String valeur) {
+    final vls = valeur.split('.');
+    final res = vls[0] + "," + vls[1].substring(0, 2);
+    return res;
+  }
+
   void _onMapCreated(GoogleMapController controller) async {
     setState(() {
       _mapController = controller;

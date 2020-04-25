@@ -55,9 +55,7 @@ class CommanderCourseBloc
   Stream<CommanderCourseState> mapEventToState(
     CommanderCourseEvent event,
   ) async* {
-    if (event is CommanderCourse) {
-      yield* _mapCommanderCourseToState(event);
-    } else if (event is DisplayCommandeCourse) {
+    if (event is DisplayCommandeCourse) {
       yield* _mapDisplayCommandeCourseToState(event);
     } else if (event is UpdateFromMap) {
       yield* _mapUpdateFromMapToState(event);
