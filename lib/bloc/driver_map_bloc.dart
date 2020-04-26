@@ -24,13 +24,14 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
   AuthentificationBloc authentificationBloc;
 
   // SocketDriverService socketDriverService;
-  SocketServiceDriver socket ;
+  SocketServiceDriver socket;
   DriverMapBloc({
     @required this.utilisateurRepository,
     @required this.authentificationBloc,
     @required this.socket,
-  });
-
+  }) {
+    _initSocket();
+  }
   @override
   DriverMapState get initialState => DriverMapInitial();
 
@@ -42,11 +43,27 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
       yield* _mapDisplayPassagerMapToState();
     else if (event is SwichDriverState)
       yield* _mapSwichDriverStateToState(event);
+    else if (event is DriverConnexionOk)
+      print("Connection etablie avec serveur");
+    else if (event is DriverConnexionKo)
+      print("Connection echouée avec serveur");
     else if (event is DriverWaiting) {
       print("je suis en attente");
     } else if (event is DriverOnLine) {
       print("je suis en ligne");
+    } else if (event is DriverCourseNotification) {
+      print("Notif de course");
+      yield* _mapDriverCourseNotificationToState(event);
     }
+  }
+
+  Stream<DriverMapState> _mapDriverCourseNotificationToState(
+      DriverCourseNotification event) async* {
+    final _state = (state as DriverMapLoaded);
+    List<Course> _courses = [event.course];
+    if (_state.courses != null) _courses.addAll(_state.courses);
+    //List<Course> _courses = List.from(_state.courses)..add(event.course);
+    yield _state.copyWith(courses: _courses);
   }
 
   Stream<DriverMapState> _mapDisplayPassagerMapToState() async* {
@@ -80,13 +97,13 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
       socket.driverSubscribForWait(
         callback: (Course course) {
           // => reception de notification de course
-          add(DriverCourseNotification(course));
+          this.add(DriverCourseNotification(course));
         },
       );
     } else
-      // socket.driverUnsubscribeForWait();
+      socket.driverUnsubscribeForWait();
 
-      yield (state as DriverMapLoaded).copyWith(isOnLine: result);
+    yield (state as DriverMapLoaded).copyWith(isOnLine: result);
   }
 
   Future<void> _updateMarkers({Marker marker}) async {
@@ -102,6 +119,18 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
     _list.add(_mMyPosition);
     if (marker != null) _list.add(marker);
     _markers.addAll(_list);
+  }
+
+  _initSocket() {
+    if (!socket.hastInit)
+      socket.initSocket(
+        onSuccess: (_, __) {
+          add(DriverConnexionOk());
+        },
+        errorSocket: (_) {
+          add(DriverConnexionKo());
+        },
+      );
   }
 
   Utilisateur get _currentUser => authentificationBloc.currentUser;

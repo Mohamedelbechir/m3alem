@@ -35,3 +35,13 @@ class DriverCourseNotification extends DriverMapEvent {
   @override
   String toString() => "DriverCourseNotification";
 }
+class DriverConnexionOk extends DriverMapEvent {
+  @override
+  String toString() => "DriverConnexionOk";
+  
+}
+class DriverConnexionKo extends DriverMapEvent {
+  @override
+  String toString() => "DriverConnexionKo";
+  
+}
