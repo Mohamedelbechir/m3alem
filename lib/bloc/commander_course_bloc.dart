@@ -97,13 +97,13 @@ class CommanderCourseBloc
         idPassager: _currentUser.cin,
       );
 
-    _socket.passagerSendRequest(
+    /*_socket.passagerSendRequest(
       course: _course,
       callback: (Course course) async {
         final driver = await _utilisateurRepository.getByCin(course.idDriver);
         _sugestionBloc.add(AddDriverSugestion(driver));
       },
-    );
+    );*/
   }
 
   Future<List<Place>> getSuggestions(String pattern) async {

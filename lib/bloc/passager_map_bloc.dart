@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart' hide Location;
+// import 'package:google_maps_webservice/places.dart' hide Location;
 import 'package:location/location.dart';
 
 import 'package:m3alem/bloc/authentification_bloc.dart';
@@ -65,8 +65,18 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
   ) async* {
     if (event is DisplayPassagerMap)
       yield* _mapDisplayPassagerMapToState(event: event);
-    else if (event is LongPress) yield* _mapLongPressToState(event);
-    else if (event is CommanderCourse) yield* _mapCommanderCourseToState(event);
+    else if (event is LongPress)
+      yield* _mapLongPressToState(event);
+    else if (event is CommanderCourse)
+      yield* _mapCommanderCourseToState(event);
+    else if (event is SendResquestToDriver) {
+      yield* _mapSendResquestToDriverToState(event);
+    }
+  }
+
+  Stream<PassagerMapState> _mapSendResquestToDriverToState(
+      SendResquestToDriver event) async* {
+    socket.passagerSendRequest(course: event.course);
   }
 
   Stream<PassagerMapState> _mapLongPressToState(LongPress event) async* {
@@ -121,27 +131,19 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
 
   Stream<PassagerMapState> _mapCommanderCourseToState(
       CommanderCourse event) async* {
-    var randomizer = Random();
-    // double distance = randomizer.nextInt(10).toDouble();
     double distance = _distanceCourse(_polylines.first.points);
     final prix = await courseRespository.getPrixCourse(distance);
     //if (_course == null)
-      _course = Course(
-        depart: event.fromText,
-        arrivee: event.toText,
-        dateCourse: DateTime.now(),
-        distance: distance,
-        prixCourse: prix,
-        idPassager: _currentUser.cin,
-      );
-
-    socket.passagerSendRequest(
-      course: _course,
-      callback: (Course course) async {
-        final driver = await utilisateurRepository.getByCin(course.idDriver);
-        sugestionBloc.add(AddDriverSugestion(driver));
-      },
+    _course = Course(
+      depart: event.fromText,
+      arrivee: event.toText,
+      dateCourse: DateTime.now(),
+      distance: distance,
+      prixCourse: prix,
+      idPassager: _currentUser.cin,
     );
+    final drivers = await courseRespository.getOnLineDriverForCourse();
+    sugestionBloc.add(AddDriverSugestion(drivers: drivers, course: _course));
   }
 
   _updateMarker({Marker marker}) {

@@ -5,9 +5,16 @@ abstract class SugestionEvent extends Equatable {
 }
 
 class AddDriverSugestion extends SugestionEvent {
-  final Utilisateur driver;
+  final List<ModelCardNotification> drivers;
+  final Course course;
 
-  AddDriverSugestion(this.driver);
+  AddDriverSugestion({this.drivers, this.course});
+
   @override
   String toString() => "AddDriverSugestion";
+}
+
+class ResetSugestion extends SugestionEvent {
+  @override
+  String toString() => "ResetSugestion";
 }

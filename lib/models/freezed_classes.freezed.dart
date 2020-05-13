@@ -640,3 +640,197 @@ abstract class _Course implements Course {
   @override
   _$CourseCopyWith<_Course> get copyWith;
 }
+
+ModelCardNotification _$ModelCardNotificationFromJson(
+    Map<String, dynamic> json) {
+  return _ModelCardNotification.fromJson(json);
+}
+
+class _$ModelCardNotificationTearOff {
+  const _$ModelCardNotificationTearOff();
+
+  _ModelCardNotification call(
+      {int cin, String nom, String typeVoiture, double rating, double temps}) {
+    return _ModelCardNotification(
+      cin: cin,
+      nom: nom,
+      typeVoiture: typeVoiture,
+      rating: rating,
+      temps: temps,
+    );
+  }
+}
+
+// ignore: unused_element
+const $ModelCardNotification = _$ModelCardNotificationTearOff();
+
+mixin _$ModelCardNotification {
+  int get cin;
+  String get nom;
+  String get typeVoiture;
+  double get rating;
+  double get temps;
+
+  Map<String, dynamic> toJson();
+  $ModelCardNotificationCopyWith<ModelCardNotification> get copyWith;
+}
+
+abstract class $ModelCardNotificationCopyWith<$Res> {
+  factory $ModelCardNotificationCopyWith(ModelCardNotification value,
+          $Res Function(ModelCardNotification) then) =
+      _$ModelCardNotificationCopyWithImpl<$Res>;
+  $Res call(
+      {int cin, String nom, String typeVoiture, double rating, double temps});
+}
+
+class _$ModelCardNotificationCopyWithImpl<$Res>
+    implements $ModelCardNotificationCopyWith<$Res> {
+  _$ModelCardNotificationCopyWithImpl(this._value, this._then);
+
+  final ModelCardNotification _value;
+  // ignore: unused_field
+  final $Res Function(ModelCardNotification) _then;
+
+  @override
+  $Res call({
+    Object cin = freezed,
+    Object nom = freezed,
+    Object typeVoiture = freezed,
+    Object rating = freezed,
+    Object temps = freezed,
+  }) {
+    return _then(_value.copyWith(
+      cin: cin == freezed ? _value.cin : cin as int,
+      nom: nom == freezed ? _value.nom : nom as String,
+      typeVoiture:
+          typeVoiture == freezed ? _value.typeVoiture : typeVoiture as String,
+      rating: rating == freezed ? _value.rating : rating as double,
+      temps: temps == freezed ? _value.temps : temps as double,
+    ));
+  }
+}
+
+abstract class _$ModelCardNotificationCopyWith<$Res>
+    implements $ModelCardNotificationCopyWith<$Res> {
+  factory _$ModelCardNotificationCopyWith(_ModelCardNotification value,
+          $Res Function(_ModelCardNotification) then) =
+      __$ModelCardNotificationCopyWithImpl<$Res>;
+  @override
+  $Res call(
+      {int cin, String nom, String typeVoiture, double rating, double temps});
+}
+
+class __$ModelCardNotificationCopyWithImpl<$Res>
+    extends _$ModelCardNotificationCopyWithImpl<$Res>
+    implements _$ModelCardNotificationCopyWith<$Res> {
+  __$ModelCardNotificationCopyWithImpl(_ModelCardNotification _value,
+      $Res Function(_ModelCardNotification) _then)
+      : super(_value, (v) => _then(v as _ModelCardNotification));
+
+  @override
+  _ModelCardNotification get _value => super._value as _ModelCardNotification;
+
+  @override
+  $Res call({
+    Object cin = freezed,
+    Object nom = freezed,
+    Object typeVoiture = freezed,
+    Object rating = freezed,
+    Object temps = freezed,
+  }) {
+    return _then(_ModelCardNotification(
+      cin: cin == freezed ? _value.cin : cin as int,
+      nom: nom == freezed ? _value.nom : nom as String,
+      typeVoiture:
+          typeVoiture == freezed ? _value.typeVoiture : typeVoiture as String,
+      rating: rating == freezed ? _value.rating : rating as double,
+      temps: temps == freezed ? _value.temps : temps as double,
+    ));
+  }
+}
+
+@JsonSerializable()
+class _$_ModelCardNotification implements _ModelCardNotification {
+  const _$_ModelCardNotification(
+      {this.cin, this.nom, this.typeVoiture, this.rating, this.temps});
+
+  factory _$_ModelCardNotification.fromJson(Map<String, dynamic> json) =>
+      _$_$_ModelCardNotificationFromJson(json);
+
+  @override
+  final int cin;
+  @override
+  final String nom;
+  @override
+  final String typeVoiture;
+  @override
+  final double rating;
+  @override
+  final double temps;
+
+  @override
+  String toString() {
+    return 'ModelCardNotification(cin: $cin, nom: $nom, typeVoiture: $typeVoiture, rating: $rating, temps: $temps)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _ModelCardNotification &&
+            (identical(other.cin, cin) ||
+                const DeepCollectionEquality().equals(other.cin, cin)) &&
+            (identical(other.nom, nom) ||
+                const DeepCollectionEquality().equals(other.nom, nom)) &&
+            (identical(other.typeVoiture, typeVoiture) ||
+                const DeepCollectionEquality()
+                    .equals(other.typeVoiture, typeVoiture)) &&
+            (identical(other.rating, rating) ||
+                const DeepCollectionEquality().equals(other.rating, rating)) &&
+            (identical(other.temps, temps) ||
+                const DeepCollectionEquality().equals(other.temps, temps)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(cin) ^
+      const DeepCollectionEquality().hash(nom) ^
+      const DeepCollectionEquality().hash(typeVoiture) ^
+      const DeepCollectionEquality().hash(rating) ^
+      const DeepCollectionEquality().hash(temps);
+
+  @override
+  _$ModelCardNotificationCopyWith<_ModelCardNotification> get copyWith =>
+      __$ModelCardNotificationCopyWithImpl<_ModelCardNotification>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_ModelCardNotificationToJson(this);
+  }
+}
+
+abstract class _ModelCardNotification implements ModelCardNotification {
+  const factory _ModelCardNotification(
+      {int cin,
+      String nom,
+      String typeVoiture,
+      double rating,
+      double temps}) = _$_ModelCardNotification;
+
+  factory _ModelCardNotification.fromJson(Map<String, dynamic> json) =
+      _$_ModelCardNotification.fromJson;
+
+  @override
+  int get cin;
+  @override
+  String get nom;
+  @override
+  String get typeVoiture;
+  @override
+  double get rating;
+  @override
+  double get temps;
+  @override
+  _$ModelCardNotificationCopyWith<_ModelCardNotification> get copyWith;
+}

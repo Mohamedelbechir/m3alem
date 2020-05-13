@@ -24,7 +24,7 @@ class DriverMapLoaded extends DriverMapState {
     this.markers,
     this.polyLines,
     this.isOnLine,
-    this.courses,
+    this.courses = const [],
   });
   @override
   List get props => [

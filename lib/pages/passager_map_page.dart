@@ -13,9 +13,11 @@ import 'package:m3alem/bloc/passager_map_bloc.dart';
 import 'package:m3alem/bloc/sugestion_bloc.dart';
 import 'package:m3alem/m3alem_keys.dart';
 import 'package:m3alem/modelView/place_model.dart';
+import 'package:m3alem/models/freezed_classes.dart';
 import 'package:m3alem/pages/map_clic.dart';
 import 'package:m3alem/widgets/loading_indicator.dart';
 import 'package:m3alem/widgets/loading_overlay.dart';
+import 'package:m3alem/widgets/notification_card_driver.dart';
 import 'package:m3alem/widgets/tag.dart';
 
 class PassagerMapPage extends StatefulWidget {
@@ -35,6 +37,75 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
 
   @override
   initState() {
+    final blocS = context.bloc<SugestionBloc>();
+    context.bloc<SugestionBloc>().listen(
+      (state) {
+        if (state is SugestedDrivers) {
+          Future.microtask(
+            () async {
+              await showModalBottomSheet(
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
+                  ),
+                ),
+                context: context,
+                builder: (context) => BlocProvider<SugestionBloc>.value(
+                  value: blocS,
+                  child: Container(
+                    height: 300,
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+                            child: _buildHeaderModal(context)),
+                        Expanded(
+                          child: ListView(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 100,
+                              ),
+                              ...state.drivers
+                                  .map((item) => CardNotificationDriver(
+                                        model: ModelCardNotification(
+                                            nom: item.nom,
+                                            rating: item.rating,
+                                            temps: item.temps,
+                                            typeVoiture: item.typeVoiture),
+                                      ))
+                                  .toList(),
+                              SizedBox(
+                                width: 100,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+              context.bloc<SugestionBloc>().add(ResetSugestion());
+            },
+          );
+        } else if (state is SugestionEmpty) {
+          Future.microtask(() => Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Aucun chauffeur en ligne'),
+                  backgroundColor: Colors.lightBlue,
+                ),
+              ));
+        }
+      },
+    );
+
     super.initState();
   }
 
@@ -53,7 +124,6 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
       );
     }
 
-    //final _bloc = context.bloc<PassagerMapBloc>();
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -90,171 +160,176 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Form(
-                                child: Column(
-                              children: <Widget>[
-                                TypeAheadField<Place>(
-                                  noItemsFoundBuilder: (context) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    child: Text(
-                                      "Aucun endroit correspondant",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color:
-                                              Theme.of(context).disabledColor,
-                                          fontSize: 18.0),
+                              child: Column(
+                                children: <Widget>[
+                                  TypeAheadField<Place>(
+                                    noItemsFoundBuilder: (context) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Text(
+                                        "Aucun endroit correspondant",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).disabledColor,
+                                            fontSize: 18.0),
+                                      ),
                                     ),
-                                  ),
-                                  direction: AxisDirection.up,
-                                  textFieldConfiguration:
-                                      TextFieldConfiguration(
-                                    controller: _fromLocationController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Depart',
-                                      icon: Icon(Icons.location_on,
-                                          color: Colors.black),
+                                    direction: AxisDirection.up,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      controller: _fromLocationController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Depart',
+                                        icon: Icon(Icons.location_on,
+                                            color: Colors.black),
+                                      ),
                                     ),
-                                  ),
-                                  itemBuilder:
-                                      (BuildContext context, suggestion) {
-                                    return ListTile(
-                                      leading: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          Icons.location_on,
-                                          color: Colors.black,
+                                    itemBuilder:
+                                        (BuildContext context, suggestion) {
+                                      return ListTile(
+                                        leading: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.location_on,
+                                            color: Colors.black,
+                                          ),
                                         ),
-                                      ),
-                                      title: Text(
-                                        suggestion.description,
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                    );
-                                  },
-                                  onSuggestionSelected: (suggestion) async {
-                                    _fromLocationController.text =
-                                        suggestion.description;
-                                    _fromPlaceDetail = await _blocPassagerMap
-                                        .getPlaceDetail(suggestion.placeId);
-                                    _blocPassagerMap.add(LongPress(
-                                      latLng: LatLng(_fromPlaceDetail.lat,
-                                          _fromPlaceDetail.lng),
-                                      source: MarkerDragSourse.from,
-                                    ));
-                                  },
-                                  suggestionsCallback: (String pattern) async {
-                                    return await _blocPassagerMap
-                                        .getSuggestions(pattern);
-                                  },
-                                ),
-                                TypeAheadFormField<Place>(
-                                  noItemsFoundBuilder: (context) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    child: Text(
-                                      "Aucun endroit correspondant",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color:
-                                              Theme.of(context).disabledColor,
-                                          fontSize: 18.0),
-                                    ),
-                                  ),
-                                  direction: AxisDirection.up,
-                                  textFieldConfiguration:
-                                      TextFieldConfiguration(
-                                    controller: _toLocationController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Destination',
-                                      icon: Icon(Icons.assistant_photo,
-                                          color: Colors.black),
-                                    ),
-                                  ),
-                                  itemBuilder:
-                                      (BuildContext context, suggestion) {
-                                    return ListTile(
-                                      leading: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          Icons.location_on,
-                                          color: Colors.black,
+                                        title: Text(
+                                          suggestion.description,
+                                          style: TextStyle(fontSize: 12),
                                         ),
-                                      ),
-                                      title: Text(
-                                        suggestion.description,
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                    );
-                                  },
-                                  onSuggestionSelected: (suggestion) async {
-                                    _toLocationController.text =
-                                        suggestion.description;
-                                    _toPlaceDetail = await _blocPassagerMap
-                                        .getPlaceDetail(suggestion.placeId);
-
-                                    _blocPassagerMap.add(LongPress(
-                                      latLng: LatLng(_toPlaceDetail.lat,
-                                          _toPlaceDetail.lng),
-                                      source: MarkerDragSourse.to,
-                                    ));
-
-                                    // _moveCamera(_fromPlaceDetail, _toPlaceDetail);
-                                  },
-                                  suggestionsCallback: (String pattern) async {
-                                    return await context
-                                        .bloc<PassagerMapBloc>()
-                                        .getSuggestions(pattern);
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                state.distance != null
-                                    ? Tag(
-                                        text:
-                                            '${arrondir(state.distance.toString())} km de distance')
-                                    : Container(),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: RaisedButton(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    color: Colors.black,
-                                    onPressed: (_toLocationController
-                                                .text.isEmpty ||
-                                            _fromLocationController
-                                                .text.isEmpty)
-                                        ? null
-                                        : () {
-                                            _blocPassagerMap
-                                                .add(CommanderCourse(
-                                              fromLocation: state.from,
-                                              toLocation: state.to,
-                                              fromText:
-                                                  _fromLocationController.text,
-                                              toText:
-                                                  _toLocationController.text,
-                                            ));
-                                          },
-                                    child: Text(
-                                      'Commander',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) async {
+                                      _fromLocationController.text =
+                                          suggestion.description;
+                                      _fromPlaceDetail = await _blocPassagerMap
+                                          .getPlaceDetail(suggestion.placeId);
+                                      _blocPassagerMap.add(LongPress(
+                                        latLng: LatLng(_fromPlaceDetail.lat,
+                                            _fromPlaceDetail.lng),
+                                        source: MarkerDragSourse.from,
+                                      ));
+                                    },
+                                    suggestionsCallback:
+                                        (String pattern) async {
+                                      return await _blocPassagerMap
+                                          .getSuggestions(pattern);
+                                    },
                                   ),
-                                )
-                              ],
-                            )),
+                                  TypeAheadFormField<Place>(
+                                    noItemsFoundBuilder: (context) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Text(
+                                        "Aucun endroit correspondant",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).disabledColor,
+                                            fontSize: 18.0),
+                                      ),
+                                    ),
+                                    direction: AxisDirection.up,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      controller: _toLocationController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Destination',
+                                        icon: Icon(Icons.assistant_photo,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    itemBuilder:
+                                        (BuildContext context, suggestion) {
+                                      return ListTile(
+                                        leading: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.location_on,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        title: Text(
+                                          suggestion.description,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) async {
+                                      _toLocationController.text =
+                                          suggestion.description;
+                                      _toPlaceDetail = await _blocPassagerMap
+                                          .getPlaceDetail(suggestion.placeId);
+
+                                      _blocPassagerMap.add(LongPress(
+                                        latLng: LatLng(_toPlaceDetail.lat,
+                                            _toPlaceDetail.lng),
+                                        source: MarkerDragSourse.to,
+                                      ));
+
+                                      // _moveCamera(_fromPlaceDetail, _toPlaceDetail);
+                                    },
+                                    suggestionsCallback:
+                                        (String pattern) async {
+                                      return await context
+                                          .bloc<PassagerMapBloc>()
+                                          .getSuggestions(pattern);
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  state.distance != null
+                                      ? Tag(
+                                          text:
+                                              '${arrondir(state.distance.toString())} km de distance')
+                                      : Container(),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: RaisedButton(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      color: Colors.black,
+                                      onPressed: (_toLocationController
+                                                  .text.isEmpty ||
+                                              _fromLocationController
+                                                  .text.isEmpty)
+                                          ? null
+                                          : () {
+                                              _blocPassagerMap
+                                                  .add(CommanderCourse(
+                                                fromLocation: state.from,
+                                                toLocation: state.to,
+                                                fromText:
+                                                    _fromLocationController
+                                                        .text,
+                                                toText:
+                                                    _toLocationController.text,
+                                              ));
+                                            },
+                                      child: Text(
+                                        'Commander',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -268,37 +343,37 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
                 return Container();
               },
             ),
-            BlocBuilder<SugestionBloc, SugestionState>(
-              builder: (context, state) {
-                if (state is SugestedDrivers) {
-                  return Positioned(
-                    bottom: 5,
-                    right: 0,
-                    left: 0,
-                    child: Card(
-                      child: ListView.separated(
-                        itemBuilder: (_, index) => ListTile(
-                          title: Text(state.drivers[index].cin.toString()),
-                          onTap: () => context
-                              .bloc<CommanderCourseBloc>()
-                              .add(SelectDriver(state.drivers[index])),
-                        ),
-                        separatorBuilder: (_, __) =>
-                            Divider(color: Colors.grey[50]),
-                        itemCount: state.drivers.length,
-                      ),
-                    ),
-                  );
-                }
-                return Container();
-              },
-            ),
           ],
         ),
       ),
     );
+  }
 
-    //MyTypedTextFieldCommander(),
+  _buildHeaderModal(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          'Notification',
+          style: TextStyle(
+              color: Colors.grey[700],
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
+        ),
+        FlatButton(
+          padding: EdgeInsets.fromLTRB(5, 0, 2, 0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+          child: Icon(
+            Icons.close,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
   }
 
   String arrondir(String valeur) {

@@ -1,17 +1,27 @@
 part of 'sugestion_bloc.dart';
 
-abstract class SugestionState extends Equatable {
+abstract class SugestionState {
   SugestionState();
 }
 
-class SugestionInitial extends SugestionState {
+class SugestionInitial extends SugestionState {}
+
+class SugestionEmpty extends SugestionState {
   @override
-  List<Object> get props => [];
+  String toString() => "SugestionEmpty";
 }
 
 class SugestedDrivers extends SugestionState {
-  final List<Utilisateur> drivers;
-  SugestedDrivers(this.drivers);
+  final List<ModelCardNotification> drivers;
+  SugestedDrivers({this.drivers = const []});
   @override
   String toString() => "SugestedDrivers";
+
+  SugestedDrivers copyWith({
+    List<ModelCardNotification> drivers,
+  }) {
+    return SugestedDrivers(
+      drivers: drivers ?? this.drivers,
+    );
+  }
 }

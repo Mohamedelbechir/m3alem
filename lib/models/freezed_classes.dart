@@ -42,3 +42,16 @@ abstract class Course with _$Course {
   }) = _Course;
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 }
+
+@freezed
+abstract class ModelCardNotification with _$ModelCardNotification {
+  const factory ModelCardNotification({
+    int cin,
+    String nom,
+    String typeVoiture,
+    double rating,
+    double temps,
+  }) = _ModelCardNotification;
+  factory ModelCardNotification.fromJson(Map<String, dynamic> json) =>
+      _$ModelCardNotificationFromJson(json);
+}

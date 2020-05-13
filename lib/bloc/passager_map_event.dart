@@ -28,6 +28,13 @@ class PassagerOnLineKo extends PassagerMapEvent {
   String toString() => "PassagerOnLineKo";
 }
 
+class SendResquestToDriver extends PassagerMapEvent {
+  final Course course;
+  SendResquestToDriver(this.course);
+  @override
+  String toString() => "SendResquestToDriver";
+}
+
 class CommanderCourse extends PassagerMapEvent {
   final LatLng toLocation;
   final LatLng fromLocation;
@@ -35,10 +42,10 @@ class CommanderCourse extends PassagerMapEvent {
   final String fromText;
 
   CommanderCourse({
-   @required this.toLocation,
-   @required this.fromLocation,
-   @required this.toText,
-   @required this.fromText,
+    @required this.toLocation,
+    @required this.fromLocation,
+    @required this.toText,
+    @required this.fromText,
   });
   @override
   String toString() => "CommanderCourse";

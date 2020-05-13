@@ -7,41 +7,28 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketServiceDriver extends SocketService {
   dynamic _driverUnsubscribeWait;
-  dynamic _driverUnsubscribeWaitPassager;
- 
-  driverSubscribForWait({OnSocketCourseResponse callback}) {
+  /* Le chafffeur écoute les notification des course */
+  driverSubscribForWait({OnSocketDriverCourseResponse callback}) {
     _driverUnsubscribeWait = client.subscribe(
-      destination: "/course/driver-waiting",
+      destination: "/course/driver-course-waiting",
       callback: (StompFrame frame) {
-        // Faire le decodage de la course (json => objet)
-        Map<String, dynamic> data = json.decode(frame.body);
+        final data = json.decode(frame.body);
         final course = Course.fromJson(data);
-        // appeler le callback avec les données
         callback(course);
       },
     );
   }
 
-  acceptCourse(Course course) {
+/* La chauffeur accepte une course et met à attendre une response de la part du passager */
+  acceptCourse(Course course, {bool confirmation = true}) {
     client.send(
-      destination: "/course/driver-accept",
-      body: json.encode(course.toJson()),
+      destination: "/course/driver-course-confirmation",
+      body: json.encode(course.toJson()
+        ..addAll(<String, dynamic>{'confirmed': confirmation})),
     );
-  }
-
-  waitPassagerResponse(Course course, OnSocketResponse callback) {
-    _driverUnsubscribeWaitPassager = client.subscribe(
-      destination: "/course/accepted-by-passager",
-      callback: callback,
-    );
-  }
-
-  driverUnsubscribeForWaitLastPassager() {
-    _driverUnsubscribeWaitPassager();
   }
 
   driverUnsubscribeForWait() {
-    
     _driverUnsubscribeWait();
   }
 }

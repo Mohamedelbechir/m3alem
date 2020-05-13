@@ -2,7 +2,6 @@ part of 'driver_map_bloc.dart';
 
 abstract class DriverMapEvent extends Equatable {
   DriverMapEvent();
-
 }
 
 class DisplayDriverMap extends DriverMapEvent {}
@@ -19,29 +18,41 @@ class DriverWaiting extends DriverMapEvent {
   @override
   String toString() => "DriverWaiting";
 }
+
 class DriverWaitingFail extends DriverMapEvent {
   @override
   String toString() => "DriverWaitingFail";
 }
+
 class DriverOnLine extends DriverMapEvent {
   @override
   String toString() => "DriverOnLine";
 }
-class DriverCourseNotification extends DriverMapEvent {
-  final Course course;
 
-  DriverCourseNotification(this.course);
-  
-  @override
-  String toString() => "DriverCourseNotification";
-}
+
+
 class DriverConnexionOk extends DriverMapEvent {
   @override
   String toString() => "DriverConnexionOk";
-  
 }
+
 class DriverConnexionKo extends DriverMapEvent {
   @override
   String toString() => "DriverConnexionKo";
-  
+}
+
+class AccepterCourse extends DriverMapEvent {
+  final Course course;
+
+  AccepterCourse(this.course);
+
+  @override
+  String toString() => "AccepterCourse";
+}
+class CourseValided extends DriverMapEvent{
+  final Course course;
+
+  CourseValided(this.course);
+  @override
+  String toString() => "CourseValided";
 }

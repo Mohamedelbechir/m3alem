@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:m3alem/bloc/authentification_bloc.dart';
+import 'package:m3alem/bloc/notifdriver_bloc.dart';
 import 'package:m3alem/models/freezed_classes.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
 import 'package:m3alem/utils/phone_service.dart';
@@ -20,14 +21,17 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
 
   BitmapDescriptor _iconCar;
 
+  final AuthentificationBloc authentificationBloc;
+  final NotifDriverBloc notifDriverBloc;
+
   UtilisateurRepository utilisateurRepository;
-  AuthentificationBloc authentificationBloc;
 
   // SocketDriverService socketDriverService;
   SocketServiceDriver socket;
   DriverMapBloc({
     @required this.utilisateurRepository,
     @required this.authentificationBloc,
+    @required this.notifDriverBloc,
     @required this.socket,
   }) {
     _initSocket();
@@ -51,19 +55,15 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
       print("je suis en attente");
     } else if (event is DriverOnLine) {
       print("je suis en ligne");
-    } else if (event is DriverCourseNotification) {
-      print("Notif de course");
-      yield* _mapDriverCourseNotificationToState(event);
-    }
+    } else if (event is AccepterCourse) {
+      yield* _mapAccepterCourseToState(event);
+    } else if (event is CourseValided) {}
   }
 
-  Stream<DriverMapState> _mapDriverCourseNotificationToState(
-      DriverCourseNotification event) async* {
-    final _state = (state as DriverMapLoaded);
-    List<Course> _courses = [event.course];
-    if (_state.courses != null) _courses.addAll(_state.courses);
-    //List<Course> _courses = List.from(_state.courses)..add(event.course);
-    yield _state.copyWith(courses: _courses);
+  Stream<DriverMapState> _mapAccepterCourseToState(
+      AccepterCourse event) async* {
+    final _course = event.course.copyWith(idDriver: _currentUser.cin);
+    socket.acceptCourse(_course);
   }
 
   Stream<DriverMapState> _mapDisplayPassagerMapToState() async* {
@@ -71,7 +71,14 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
       _currentPosition = await PhoneService.getLocation();
       if (_iconCar == null) _iconCar = await PhoneService.loadBitmap('car.png');
       await _updateMarkers();
-
+      if (_currentUser.isOnLine) {
+        socket.driverSubscribForWait(
+          callback: (Course course) {
+            // => reception de notification de course
+            notifDriverBloc.add(PushNotif(course));
+          },
+        );
+      }
       yield DriverMapLoaded(
         currentLatLng: _currentPosition,
         markers: _markers,
@@ -91,13 +98,11 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
     authentificationBloc
         .setCurrentUSer(_currentUser.copyWith(isOnLine: event.isOnLine));
 
-    // if (socket == null) _initSocket();
-
     if (event.isOnLine) {
       socket.driverSubscribForWait(
         callback: (Course course) {
           // => reception de notification de course
-          this.add(DriverCourseNotification(course));
+          notifDriverBloc.add(PushNotif(course));
         },
       );
     } else

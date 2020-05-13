@@ -5,11 +5,12 @@ import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
-
-
 typedef OnSocketSuccess = Function(StompClient client, StompFrame frame);
 typedef OnSocketResponse = Function(StompFrame frame);
-typedef OnSocketCourseResponse = Function(Course frame);
+typedef OnSocketDriverCourseResponse = Function(Course course);
+typedef OnSocketPassagerCourseResponse = Function({Course course, bool confirmed});
+typedef OnSocketDriverRequestResponse = Function(
+    List<ModelCardNotification> drivers);
 
 abstract class SocketService {
   StompClient _client;

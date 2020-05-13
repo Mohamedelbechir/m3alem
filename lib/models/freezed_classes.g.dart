@@ -70,3 +70,24 @@ Map<String, dynamic> _$_$_CourseToJson(_$_Course instance) => <String, dynamic>{
       'prixCourse': instance.prixCourse,
       'dateCourse': instance.dateCourse?.toIso8601String(),
     };
+
+_$_ModelCardNotification _$_$_ModelCardNotificationFromJson(
+    Map<String, dynamic> json) {
+  return _$_ModelCardNotification(
+    cin: json['cin'] as int,
+    nom: json['nom'] as String,
+    typeVoiture: json['typeVoiture'] as String,
+    rating: (json['rating'] as num)?.toDouble(),
+    temps: (json['temps'] as num)?.toDouble(),
+  );
+}
+
+Map<String, dynamic> _$_$_ModelCardNotificationToJson(
+        _$_ModelCardNotification instance) =>
+    <String, dynamic>{
+      'cin': instance.cin,
+      'nom': instance.nom,
+      'typeVoiture': instance.typeVoiture,
+      'rating': instance.rating,
+      'temps': instance.temps,
+    };

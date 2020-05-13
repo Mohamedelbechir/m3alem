@@ -8,8 +8,11 @@ part 'sugestion_event.dart';
 part 'sugestion_state.dart';
 
 class SugestionBloc extends Bloc<SugestionEvent, SugestionState> {
+  Course _currentCourse;
+
   @override
   SugestionState get initialState => SugestionInitial();
+  Course get currentCourse => _currentCourse;
 
   @override
   Stream<SugestionState> mapEventToState(
@@ -17,14 +20,15 @@ class SugestionBloc extends Bloc<SugestionEvent, SugestionState> {
   ) async* {
     if (event is AddDriverSugestion) {
       yield* _mapAddDriverSugestionToState(event);
-    }
+    } else if (event is ResetSugestion) yield SugestionInitial();
   }
 
   Stream<SugestionState> _mapAddDriverSugestionToState(
       AddDriverSugestion event) async* {
-    final drivers = (state is SugestedDrivers)
-        ? [...(state as SugestedDrivers).drivers, event.driver]
-        : [event.driver];
-    yield SugestedDrivers(drivers);
+    _currentCourse = event.course;
+    if (event.drivers.isEmpty)
+      yield SugestionEmpty();
+    else
+      yield SugestedDrivers(drivers: event.drivers);
   }
 }

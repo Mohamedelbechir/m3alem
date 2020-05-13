@@ -18,6 +18,7 @@ class PassagerMapLoaded extends PassagerMapState {
   final String toTxt;
   final bool isLoading;
   final double distance;
+  final List<ModelCardNotification> drivers;
 
   PassagerMapLoaded({
     this.from,
@@ -28,6 +29,7 @@ class PassagerMapLoaded extends PassagerMapState {
     this.toTxt,
     this.isLoading = false,
     this.distance,
+    this.drivers = const [],
   });
 
   @override
@@ -40,6 +42,7 @@ class PassagerMapLoaded extends PassagerMapState {
         this.toTxt,
         this.isLoading,
         this.distance,
+        this.drivers,
       ];
 
   PassagerMapLoaded copyWith({
@@ -51,6 +54,7 @@ class PassagerMapLoaded extends PassagerMapState {
     String toTxt,
     bool isLoading,
     double distance,
+    List<ModelCardNotification> drivers,
   }) {
     return PassagerMapLoaded(
       from: from ?? this.from,
@@ -61,6 +65,7 @@ class PassagerMapLoaded extends PassagerMapState {
       toTxt: toTxt ?? this.toTxt,
       isLoading: isLoading ?? this.isLoading,
       distance: distance ?? this.distance,
+      drivers: drivers ?? this.drivers,
     );
   }
 
