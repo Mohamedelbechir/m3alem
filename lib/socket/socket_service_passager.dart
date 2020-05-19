@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:m3alem/models/freezed_classes.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
@@ -13,7 +14,7 @@ class SocketServicePassager extends SocketService {
   factory SocketServicePassager() => _instance;
 
   passagerSendRequest(
-      {Course course, OnSocketPassagerCourseResponse callback}) {
+      {@required Course course,@required OnSocketPassagerCourseResponse callback}) {
     /* pour être notifier en cas d'acceptation */
     _passagerUnsubscribeWaitDriver = client.subscribe(
       destination:

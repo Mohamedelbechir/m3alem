@@ -31,6 +31,7 @@ class SendResquestToDriver extends SugestionEvent {
   @override
   String toString() => "SendResquestToDriver";
 }
+
 class AddDriverSugestion extends SugestionEvent {
   final List<ModelCardNotification> drivers;
   final Course course;

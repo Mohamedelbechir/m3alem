@@ -102,7 +102,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
     double distance;
     if (polyl.isNotEmpty) {
       // calculer la distance des deux points
-      distance = calculDistanceCourse(_polylines.first.points);
+      distance = calculDistanceCourse(polyl.first.points);
     }
 
     yield PassagerMapLoaded(
@@ -112,7 +112,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
       toTxt: _toText,
       fromTxt: _fromText,
       markers: _markers,
-      polyLines: _polylines,
+      polyLines: polyl,
       distance: distance,
     );
   }
