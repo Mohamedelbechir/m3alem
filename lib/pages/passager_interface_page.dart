@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m3alem/bloc/authentification_bloc.dart';
-import 'package:m3alem/bloc/commander_course_bloc.dart';
 import 'package:m3alem/bloc/passager_map_bloc.dart';
 import 'package:m3alem/bloc/sugestion_bloc.dart';
 import 'package:m3alem/google_map_services/google_map_service.dart';
@@ -25,26 +24,17 @@ class _PassagerInterfacePageState extends State<PassagerInterfacePage> {
   @override
   void initState() {
     SocketServicePassager _socket = SocketServicePassager();
-    GoogleMapServices _services = GoogleMapServices();
-    final blocS = SugestionBloc();
-    
+    final blocS = SugestionBloc(
+      courseRespository: context.repository<CourseRespository>(),
+      authentificationBloc: context.bloc<AuthentificationBloc>(),
+    );
+
     final blocMap = PassagerMapBloc(
       utilisateurRepository: context.repository<UtilisateurRepository>(),
       courseRespository: context.repository<CourseRespository>(),
-      googleMapServices: _services,
       authentificationBloc: context.bloc<AuthentificationBloc>(),
       sugestionBloc: blocS,
       socket: _socket,
-    );
-
-    final blocCommander = CommanderCourseBloc(
-      utilisateurRepository: context.repository<UtilisateurRepository>(),
-      sugestionBloc: blocS,
-      passagerMapBloc: blocMap,
-      googleMapServices: _services,
-      courseRespository: context.repository<CourseRespository>(),
-      socket: _socket,
-      authentificationBloc: context.bloc<AuthentificationBloc>(),
     );
 
     _listMenu = <Widget>[
@@ -52,9 +42,6 @@ class _PassagerInterfacePageState extends State<PassagerInterfacePage> {
         providers: [
           BlocProvider<PassagerMapBloc>.value(
             value: blocMap..add(DisplayPassagerMap()),
-          ),
-          BlocProvider<CommanderCourseBloc>.value(
-            value: blocCommander..add(DisplayCommandeCourse()),
           ),
           BlocProvider<SugestionBloc>.value(
             value: blocS,

@@ -6,8 +6,9 @@ import 'package:m3alem/models/freezed_classes.dart';
 
 class CardNotificationDriver extends StatefulWidget {
   final ModelCardNotification model;
+  final Function() onValid;
 
-  const CardNotificationDriver({Key key, @required this.model})
+  const CardNotificationDriver({Key key, @required this.model, this.onValid})
       : super(key: key);
   @override
   _CardNotificationDriverState createState() => _CardNotificationDriverState();
@@ -126,21 +127,14 @@ class _CardNotificationDriverState extends State<CardNotificationDriver> {
                 ),
                 Expanded(
                   child: RaisedButton(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      color: Colors.black,
-                      child: Text(
-                        'Valider',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        final course = context
-                            .bloc<SugestionBloc>()
-                            .currentCourse
-                            .copyWith(idDriver: widget.model.cin);
-                        context
-                            .bloc<PassagerMapBloc>()
-                            .add(SendResquestToDriver(course));
-                      }),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    color: Colors.black,
+                    child: Text(
+                      'Valider',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () => widget.onValid(),
+                  ),
                 ),
               ],
             )

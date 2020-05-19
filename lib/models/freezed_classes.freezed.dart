@@ -409,6 +409,8 @@ class _$CourseTearOff {
       int idDriver,
       String depart,
       String arrivee,
+      String latLngDepart,
+      String latLngArrivee,
       double distance,
       double prixCourse,
       DateTime dateCourse}) {
@@ -417,6 +419,8 @@ class _$CourseTearOff {
       idDriver: idDriver,
       depart: depart,
       arrivee: arrivee,
+      latLngDepart: latLngDepart,
+      latLngArrivee: latLngArrivee,
       distance: distance,
       prixCourse: prixCourse,
       dateCourse: dateCourse,
@@ -432,6 +436,8 @@ mixin _$Course {
   int get idDriver;
   String get depart;
   String get arrivee;
+  String get latLngDepart;
+  String get latLngArrivee;
   double get distance;
   double get prixCourse;
   DateTime get dateCourse;
@@ -448,6 +454,8 @@ abstract class $CourseCopyWith<$Res> {
       int idDriver,
       String depart,
       String arrivee,
+      String latLngDepart,
+      String latLngArrivee,
       double distance,
       double prixCourse,
       DateTime dateCourse});
@@ -466,6 +474,8 @@ class _$CourseCopyWithImpl<$Res> implements $CourseCopyWith<$Res> {
     Object idDriver = freezed,
     Object depart = freezed,
     Object arrivee = freezed,
+    Object latLngDepart = freezed,
+    Object latLngArrivee = freezed,
     Object distance = freezed,
     Object prixCourse = freezed,
     Object dateCourse = freezed,
@@ -475,6 +485,12 @@ class _$CourseCopyWithImpl<$Res> implements $CourseCopyWith<$Res> {
       idDriver: idDriver == freezed ? _value.idDriver : idDriver as int,
       depart: depart == freezed ? _value.depart : depart as String,
       arrivee: arrivee == freezed ? _value.arrivee : arrivee as String,
+      latLngDepart: latLngDepart == freezed
+          ? _value.latLngDepart
+          : latLngDepart as String,
+      latLngArrivee: latLngArrivee == freezed
+          ? _value.latLngArrivee
+          : latLngArrivee as String,
       distance: distance == freezed ? _value.distance : distance as double,
       prixCourse:
           prixCourse == freezed ? _value.prixCourse : prixCourse as double,
@@ -493,6 +509,8 @@ abstract class _$CourseCopyWith<$Res> implements $CourseCopyWith<$Res> {
       int idDriver,
       String depart,
       String arrivee,
+      String latLngDepart,
+      String latLngArrivee,
       double distance,
       double prixCourse,
       DateTime dateCourse});
@@ -512,6 +530,8 @@ class __$CourseCopyWithImpl<$Res> extends _$CourseCopyWithImpl<$Res>
     Object idDriver = freezed,
     Object depart = freezed,
     Object arrivee = freezed,
+    Object latLngDepart = freezed,
+    Object latLngArrivee = freezed,
     Object distance = freezed,
     Object prixCourse = freezed,
     Object dateCourse = freezed,
@@ -521,6 +541,12 @@ class __$CourseCopyWithImpl<$Res> extends _$CourseCopyWithImpl<$Res>
       idDriver: idDriver == freezed ? _value.idDriver : idDriver as int,
       depart: depart == freezed ? _value.depart : depart as String,
       arrivee: arrivee == freezed ? _value.arrivee : arrivee as String,
+      latLngDepart: latLngDepart == freezed
+          ? _value.latLngDepart
+          : latLngDepart as String,
+      latLngArrivee: latLngArrivee == freezed
+          ? _value.latLngArrivee
+          : latLngArrivee as String,
       distance: distance == freezed ? _value.distance : distance as double,
       prixCourse:
           prixCourse == freezed ? _value.prixCourse : prixCourse as double,
@@ -537,6 +563,8 @@ class _$_Course implements _Course {
       this.idDriver,
       this.depart,
       this.arrivee,
+      this.latLngDepart,
+      this.latLngArrivee,
       this.distance,
       this.prixCourse,
       this.dateCourse});
@@ -553,6 +581,10 @@ class _$_Course implements _Course {
   @override
   final String arrivee;
   @override
+  final String latLngDepart;
+  @override
+  final String latLngArrivee;
+  @override
   final double distance;
   @override
   final double prixCourse;
@@ -561,7 +593,7 @@ class _$_Course implements _Course {
 
   @override
   String toString() {
-    return 'Course(idPassager: $idPassager, idDriver: $idDriver, depart: $depart, arrivee: $arrivee, distance: $distance, prixCourse: $prixCourse, dateCourse: $dateCourse)';
+    return 'Course(idPassager: $idPassager, idDriver: $idDriver, depart: $depart, arrivee: $arrivee, latLngDepart: $latLngDepart, latLngArrivee: $latLngArrivee, distance: $distance, prixCourse: $prixCourse, dateCourse: $dateCourse)';
   }
 
   @override
@@ -579,6 +611,12 @@ class _$_Course implements _Course {
             (identical(other.arrivee, arrivee) ||
                 const DeepCollectionEquality()
                     .equals(other.arrivee, arrivee)) &&
+            (identical(other.latLngDepart, latLngDepart) ||
+                const DeepCollectionEquality()
+                    .equals(other.latLngDepart, latLngDepart)) &&
+            (identical(other.latLngArrivee, latLngArrivee) ||
+                const DeepCollectionEquality()
+                    .equals(other.latLngArrivee, latLngArrivee)) &&
             (identical(other.distance, distance) ||
                 const DeepCollectionEquality()
                     .equals(other.distance, distance)) &&
@@ -597,6 +635,8 @@ class _$_Course implements _Course {
       const DeepCollectionEquality().hash(idDriver) ^
       const DeepCollectionEquality().hash(depart) ^
       const DeepCollectionEquality().hash(arrivee) ^
+      const DeepCollectionEquality().hash(latLngDepart) ^
+      const DeepCollectionEquality().hash(latLngArrivee) ^
       const DeepCollectionEquality().hash(distance) ^
       const DeepCollectionEquality().hash(prixCourse) ^
       const DeepCollectionEquality().hash(dateCourse);
@@ -617,6 +657,8 @@ abstract class _Course implements Course {
       int idDriver,
       String depart,
       String arrivee,
+      String latLngDepart,
+      String latLngArrivee,
       double distance,
       double prixCourse,
       DateTime dateCourse}) = _$_Course;
@@ -631,6 +673,10 @@ abstract class _Course implements Course {
   String get depart;
   @override
   String get arrivee;
+  @override
+  String get latLngDepart;
+  @override
+  String get latLngArrivee;
   @override
   double get distance;
   @override

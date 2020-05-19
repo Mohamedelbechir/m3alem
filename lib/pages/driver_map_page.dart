@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m3alem/m3alem_keys.dart';
+import 'package:m3alem/utils/utilis_fonctions.dart';
 import 'package:m3alem/widgets/lite_rolling_switch.dart';
 import 'package:m3alem/bloc/driver_map_bloc.dart';
 
@@ -28,8 +30,9 @@ class _DriverMapPageState extends State<DriverMapPage> {
             child: Scaffold(
               body: Stack(alignment: Alignment.topCenter, children: [
                 GoogleMap(
+                  key: AppM3alemKeys.googleMap,
                   initialCameraPosition:
-                      _getCameraPosition(latLng: state.currentLatLng),
+                      getCameraPosition(latLng: state.currentLatLng),
                   onMapCreated: _onMapCreated,
                   markers: state.markers,
                   myLocationEnabled: true,
@@ -72,14 +75,6 @@ class _DriverMapPageState extends State<DriverMapPage> {
     });
   }
 
-  CameraPosition _getCameraPosition({LatLng latLng}) {
-    return CameraPosition(
-      bearing: 192.8334901395799,
-      target: latLng,
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414,
-    );
-  }
 }
 
 class MapSample extends StatefulWidget {

@@ -7,12 +7,15 @@ class AppM3alemKeys {
 
   static final driverMap = const Key('__driverMap__');
   static final driverMoney = const Key('__driverMoney__');
+  static final driverNotification = const Key('__driverNotification__');
   static final driverSetting = const Key('__driverSetting__');
 
   static final passagerMap = const Key('__passagerMap__');
   static final passagerHistory = const Key('__passagerHistory__');
   static final passagerSetting = const Key('__passagerSetting__');
-  
+
   static final apiKey = 'AIzaSyD2YXAzLA9aq0FraUVUEJyWLJav1HOiLWw';
   static final apiKey2 = 'AIzaSyCDJa_D_Ewcm8wE8OAH6uBQttSxALdoNUI';
+
+  static final googleMap = const Key("__googleMpa__");
 }

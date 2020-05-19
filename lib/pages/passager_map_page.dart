@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:m3alem/bloc/commander_course_bloc.dart';
 import 'package:m3alem/bloc/passager_map_bloc.dart';
 import 'package:m3alem/bloc/sugestion_bloc.dart';
 import 'package:m3alem/m3alem_keys.dart';
@@ -19,6 +18,7 @@ import 'package:m3alem/widgets/loading_indicator.dart';
 import 'package:m3alem/widgets/loading_overlay.dart';
 import 'package:m3alem/widgets/notification_card_driver.dart';
 import 'package:m3alem/widgets/tag.dart';
+import 'package:m3alem/widgets/utilis_buid_widget.dart';
 
 class PassagerMapPage extends StatefulWidget {
   PassagerMapPage({Key key}) : super(key: key);
@@ -38,6 +38,8 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
   @override
   initState() {
     final blocS = context.bloc<SugestionBloc>();
+    final blocP = context.bloc<PassagerMapBloc>();
+
     context.bloc<SugestionBloc>().listen(
       (state) {
         if (state is SugestedDrivers) {
@@ -60,7 +62,8 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
                       children: <Widget>[
                         Padding(
                             padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
-                            child: _buildHeaderModal(context)),
+                            child: buildHeaderModal(
+                                context: context, title: "Notification")),
                         Expanded(
                           child: ListView(
                             shrinkWrap: true,
@@ -71,12 +74,14 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
                               ),
                               ...state.drivers
                                   .map((item) => CardNotificationDriver(
-                                        model: ModelCardNotification(
-                                            nom: item.nom,
-                                            rating: item.rating,
-                                            temps: item.temps,
-                                            typeVoiture: item.typeVoiture),
-                                      ))
+                                      model: item,
+                                      onValid: () {
+                                        blocS.add(
+                                          SendResquestToDriver(state
+                                              .currentCourse
+                                              .copyWith(idDriver: item.cin)),
+                                        );
+                                      }))
                                   .toList(),
                               SizedBox(
                                 width: 100,
@@ -112,6 +117,7 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
   @override
   Widget build(BuildContext context) {
     final _blocPassagerMap = context.bloc<PassagerMapBloc>();
+    final _blocSugestion = context.bloc<SugestionBloc>();
 
     CameraPosition _getCameraPosition(
         {LatLng latLng =
@@ -309,10 +315,11 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
                                                   .text.isEmpty)
                                           ? null
                                           : () {
-                                              _blocPassagerMap
+                                              _blocSugestion
                                                   .add(CommanderCourse(
                                                 fromLocation: state.from,
                                                 toLocation: state.to,
+                                                polyLines: state.polyLines,
                                                 fromText:
                                                     _fromLocationController
                                                         .text,
@@ -346,33 +353,6 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
           ],
         ),
       ),
-    );
-  }
-
-  _buildHeaderModal(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          'Notification',
-          style: TextStyle(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.bold,
-              fontSize: 20),
-        ),
-        FlatButton(
-          padding: EdgeInsets.fromLTRB(5, 0, 2, 0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-          child: Icon(
-            Icons.close,
-            color: Colors.black,
-          ),
-        ),
-      ],
     );
   }
 

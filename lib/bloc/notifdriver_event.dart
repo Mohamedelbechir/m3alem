@@ -16,7 +16,16 @@ class DisplayNofifDriver extends NotifDriverEvent {
   String toString() => "DisplayNofifDriver";
 }
 
-class ToContultedNotif extends NotifDriverEvent {
+class ToConsultedNotif extends NotifDriverEvent {
   @override
   String toString() => "ToContultedNotif";
+}
+
+class AccepterCourse extends NotifDriverEvent {
+  final Course course;
+
+  AccepterCourse(this.course);
+
+  @override
+  String toString() => "AccepterCourse";
 }

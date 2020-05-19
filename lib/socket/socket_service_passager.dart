@@ -7,8 +7,13 @@ import 'socket.dart';
 
 class SocketServicePassager extends SocketService {
   dynamic _passagerUnsubscribeWaitDriver;
+  static final SocketServicePassager _instance =
+      SocketServicePassager._internal();
+  SocketServicePassager._internal();
+  factory SocketServicePassager() => _instance;
 
-  passagerSendRequest({Course course, OnSocketPassagerCourseResponse callback}) {
+  passagerSendRequest(
+      {Course course, OnSocketPassagerCourseResponse callback}) {
     /* pour être notifier en cas d'acceptation */
     _passagerUnsubscribeWaitDriver = client.subscribe(
       destination:

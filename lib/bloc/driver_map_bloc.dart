@@ -27,12 +27,11 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
   UtilisateurRepository utilisateurRepository;
 
   // SocketDriverService socketDriverService;
-  SocketServiceDriver socket;
+  SocketServiceDriver socket = SocketServiceDriver();
   DriverMapBloc({
     @required this.utilisateurRepository,
     @required this.authentificationBloc,
     @required this.notifDriverBloc,
-    @required this.socket,
   }) {
     _initSocket();
   }
@@ -55,15 +54,7 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
       print("je suis en attente");
     } else if (event is DriverOnLine) {
       print("je suis en ligne");
-    } else if (event is AccepterCourse) {
-      yield* _mapAccepterCourseToState(event);
-    } else if (event is CourseValided) {}
-  }
-
-  Stream<DriverMapState> _mapAccepterCourseToState(
-      AccepterCourse event) async* {
-    final _course = event.course.copyWith(idDriver: _currentUser.cin);
-    socket.acceptCourse(_course);
+    }
   }
 
   Stream<DriverMapState> _mapDisplayPassagerMapToState() async* {
@@ -71,14 +62,9 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
       _currentPosition = await PhoneService.getLocation();
       if (_iconCar == null) _iconCar = await PhoneService.loadBitmap('car.png');
       await _updateMarkers();
-      if (_currentUser.isOnLine) {
-        socket.driverSubscribForWait(
-          callback: (Course course) {
-            // => reception de notification de course
-            notifDriverBloc.add(PushNotif(course));
-          },
-        );
-      }
+
+      socket.changeDriverStatus(_currentUser.isOnLine);
+
       yield DriverMapLoaded(
         currentLatLng: _currentPosition,
         markers: _markers,
@@ -98,15 +84,7 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
     authentificationBloc
         .setCurrentUSer(_currentUser.copyWith(isOnLine: event.isOnLine));
 
-    if (event.isOnLine) {
-      socket.driverSubscribForWait(
-        callback: (Course course) {
-          // => reception de notification de course
-          notifDriverBloc.add(PushNotif(course));
-        },
-      );
-    } else
-      socket.driverUnsubscribeForWait();
+    socket.changeDriverStatus(event.isOnLine);
 
     yield (state as DriverMapLoaded).copyWith(isOnLine: result);
   }

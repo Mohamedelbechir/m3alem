@@ -53,6 +53,8 @@ _$_Course _$_$_CourseFromJson(Map<String, dynamic> json) {
     idDriver: json['idDriver'] as int,
     depart: json['depart'] as String,
     arrivee: json['arrivee'] as String,
+    latLngDepart: json['latLngDepart'] as String,
+    latLngArrivee: json['latLngArrivee'] as String,
     distance: (json['distance'] as num)?.toDouble(),
     prixCourse: (json['prixCourse'] as num)?.toDouble(),
     dateCourse: json['dateCourse'] == null
@@ -66,6 +68,8 @@ Map<String, dynamic> _$_$_CourseToJson(_$_Course instance) => <String, dynamic>{
       'idDriver': instance.idDriver,
       'depart': instance.depart,
       'arrivee': instance.arrivee,
+      'latLngDepart': instance.latLngDepart,
+      'latLngArrivee': instance.latLngArrivee,
       'distance': instance.distance,
       'prixCourse': instance.prixCourse,
       'dateCourse': instance.dateCourse?.toIso8601String(),

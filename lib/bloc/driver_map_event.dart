@@ -29,8 +29,6 @@ class DriverOnLine extends DriverMapEvent {
   String toString() => "DriverOnLine";
 }
 
-
-
 class DriverConnexionOk extends DriverMapEvent {
   @override
   String toString() => "DriverConnexionOk";
@@ -41,18 +39,3 @@ class DriverConnexionKo extends DriverMapEvent {
   String toString() => "DriverConnexionKo";
 }
 
-class AccepterCourse extends DriverMapEvent {
-  final Course course;
-
-  AccepterCourse(this.course);
-
-  @override
-  String toString() => "AccepterCourse";
-}
-class CourseValided extends DriverMapEvent{
-  final Course course;
-
-  CourseValided(this.course);
-  @override
-  String toString() => "CourseValided";
-}

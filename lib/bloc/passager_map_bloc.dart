@@ -17,6 +17,7 @@ import 'package:m3alem/models/freezed_classes.dart';
 import 'package:m3alem/repository/course_repository.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
 import 'package:m3alem/socket/socket_service_passager.dart';
+import 'package:m3alem/utils/utilis_fonctions.dart';
 
 import '../m3alem_keys.dart';
 
@@ -29,7 +30,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
 
   Location _location = new Location();
 
-  GoogleMapServices googleMapServices;
+  GoogleMapServices googleMapServices = GoogleMapServices();
 
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
@@ -48,7 +49,6 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
   PassagerMapBloc({
     @required this.authentificationBloc,
     @required this.sugestionBloc,
-    @required this.googleMapServices,
     @required this.socket,
     @required this.courseRespository,
     @required this.utilisateurRepository,
@@ -65,13 +65,7 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
   ) async* {
     if (event is DisplayPassagerMap)
       yield* _mapDisplayPassagerMapToState(event: event);
-    else if (event is LongPress)
-      yield* _mapLongPressToState(event);
-    else if (event is CommanderCourse)
-      yield* _mapCommanderCourseToState(event);
-    else if (event is SendResquestToDriver) {
-      yield* _mapSendResquestToDriverToState(event);
-    }
+    else if (event is LongPress) yield* _mapLongPressToState(event);
   }
 
   Stream<PassagerMapState> _mapSendResquestToDriverToState(
@@ -80,6 +74,8 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
   }
 
   Stream<PassagerMapState> _mapLongPressToState(LongPress event) async* {
+    
+    
     if (event.source == MarkerDragSourse.to)
       _toLatLng = event.latLng;
     else
@@ -101,12 +97,12 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
       _fromText =
           await googleMapServices.getLocationNameByLatLng(latLng: _fromLatLng);
     }
-    await _updatePolilyne(); // va demander les info depuis google api
-
+    //await _updatePolilyne(); // va demander les info depuis google api
+    final polyl = await _getPolilyne(_fromLatLng, _toLatLng);
     double distance;
-    if (_polylines.isNotEmpty) {
+    if (polyl.isNotEmpty) {
       // calculer la distance des deux points
-      distance = _distanceCourse(_polylines.first.points);
+      distance = calculDistanceCourse(_polylines.first.points);
     }
 
     yield PassagerMapLoaded(
@@ -127,23 +123,6 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
     await _loadIcons();
     _updateMarker();
     yield PassagerMapLoaded(from: _fromLatLng, markers: _markers);
-  }
-
-  Stream<PassagerMapState> _mapCommanderCourseToState(
-      CommanderCourse event) async* {
-    double distance = _distanceCourse(_polylines.first.points);
-    final prix = await courseRespository.getPrixCourse(distance);
-    //if (_course == null)
-    _course = Course(
-      depart: event.fromText,
-      arrivee: event.toText,
-      dateCourse: DateTime.now(),
-      distance: distance,
-      prixCourse: prix,
-      idPassager: _currentUser.cin,
-    );
-    final drivers = await courseRespository.getOnLineDriverForCourse();
-    sugestionBloc.add(AddDriverSugestion(drivers: drivers, course: _course));
   }
 
   _updateMarker({Marker marker}) {
@@ -167,6 +146,20 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
         color: Colors.black,
       ),
     );
+  }
+
+  Future<Set<Polyline>> _getPolilyne(LatLng fromLatLng, LatLng toLatLng) async {
+    List<LatLng> latLngs =
+        await googleMapServices.getPolyline(_fromLatLng, _toLatLng);
+
+    return Set<Polyline>.of([
+      Polyline(
+        polylineId: PolylineId('__cource__'),
+        width: 10,
+        points: latLngs,
+        color: Colors.black,
+      )
+    ]);
   }
 
   Marker _getFromMarker() {
@@ -253,25 +246,5 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
           add(PassagerOnLineKo());
         },
       );
-  }
-
-  double _distanceCourse(List<LatLng> poly) {
-    double calculateDistance(LatLng latLng1, LatLng latLng2) {
-      final p = 0.017453292519943295;
-      final c = cos;
-      final a = 0.5 -
-          c((latLng2.latitude - latLng1.latitude) * p) / 2 +
-          c(latLng1.latitude * p) *
-              c(latLng2.latitude * p) *
-              (1 - c((latLng2.longitude - latLng1.longitude) * p)) /
-              2;
-      return 12742 * asin(sqrt(a));
-    }
-
-    double totalDistance = 0;
-    for (var i = 0; i < poly.length - 1; i++) {
-      totalDistance += calculateDistance(poly[i], poly[i + 1]);
-    }
-    return totalDistance;
   }
 }

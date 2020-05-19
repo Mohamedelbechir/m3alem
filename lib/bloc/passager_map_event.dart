@@ -28,28 +28,6 @@ class PassagerOnLineKo extends PassagerMapEvent {
   String toString() => "PassagerOnLineKo";
 }
 
-class SendResquestToDriver extends PassagerMapEvent {
-  final Course course;
-  SendResquestToDriver(this.course);
-  @override
-  String toString() => "SendResquestToDriver";
-}
 
-class CommanderCourse extends PassagerMapEvent {
-  final LatLng toLocation;
-  final LatLng fromLocation;
-  final String toText;
-  final String fromText;
 
-  CommanderCourse({
-    @required this.toLocation,
-    @required this.fromLocation,
-    @required this.toText,
-    @required this.fromText,
-  });
-  @override
-  String toString() => "CommanderCourse";
 
-  @override
-  List get props => [toLocation, fromLocation, toText, fromText];
-}

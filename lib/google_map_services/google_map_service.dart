@@ -10,6 +10,10 @@ import 'package:m3alem/styles/uuid.dart';
 import 'package:geolocator/geolocator.dart';
 
 class GoogleMapServices {
+  static final GoogleMapServices _instance = GoogleMapServices._internal();
+  GoogleMapServices._internal();
+  factory GoogleMapServices() => _instance;
+
   GoogleMapPolyline googleMapPolyline =
       new GoogleMapPolyline(apiKey: AppM3alemKeys.apiKey2);
   GoogleDistanceMatrix _googleDistanceMatrix =
@@ -38,7 +42,7 @@ class GoogleMapServices {
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&language=fr&key=$_apiKeySecond&sessiontoken=$sessionToken';
     //print('Autocomplete(sessionToken): $sessionToken');
 
-    final  response = await http.get(url1);
+    final response = await http.get(url1);
     final responseData = json.decode(response.body);
     final predictions = responseData['predictions'];
 
@@ -59,7 +63,7 @@ class GoogleMapServices {
       final String url =
           "$baseUrl?latlng=${latLng.latitude},${latLng.longitude}&key=$_apiKeySecond";
 
-      final  response = await http.get(url);
+      final response = await http.get(url);
       final responseData = json.decode(response.body);
       final result = responseData['results'][0]["formatted_address"] as String;
 
@@ -88,7 +92,7 @@ class GoogleMapServices {
 
   Future<List<LatLng>> getRouteCoordinates(LatLng l1, LatLng l2) async {
     String url =
-        "https://maps.googleapis.com/maps/api/directions/json?origin=${l1.latitude},${l1.longitude}&destination=${l2.latitude},${l2.longitude}&key=$_apiKey";
+        "https://maps.googleapis.com/maps/api/directions/json?origin=${l1.latitude},${l1.longitude}&destination=${l2.latitude},${l2.longitude}&key=$_apiKeySecond";
     http.Response response = await http.get(url);
     Map values = jsonDecode(response.body);
     final val = values["routes"][0]["overview_polyline"]["points"];

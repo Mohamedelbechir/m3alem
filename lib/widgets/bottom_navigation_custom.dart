@@ -44,29 +44,27 @@ class CustumBottomNavigation extends StatelessWidget {
       title: Container(),
       icon: BlocBuilder<NotifDriverBloc, NotifDriverState>(
           builder: (context, state) {
-        if (state is NotifLoaded) {
-          return Stack(children: [
-            Icon(Icons.notifications),
-            state.consulted
-                ? Container()
-                : Positioned(
-                    top: 5,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
+        return Stack(children: [
+          Icon(Icons.notifications),
+          ((state is NotifLoaded) && state.consulted)
+              ? Container(width: 0)
+              : Positioned(
+                  top: 2,
+                  right: 2,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
                         color: Colors.red,
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ))
-          ]);
-        }
+                        borderRadius: BorderRadius.circular(8)),
+                  ))
+        ]);
       }),
-      activeIcon: Icon(Icons.person, color: Colors.black, size: 30),
+      activeIcon: Icon(Icons.notifications, color: Colors.black, size: 30),
     );
 
     if (isDriver)
-      _items.addAll([map, statistique, notification, profil]);
+      _items.addAll([map, statistique, historique, notification, profil]);
     else
       _items.addAll([map, historique, profil]);
 

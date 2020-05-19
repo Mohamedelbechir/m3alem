@@ -36,6 +36,8 @@ abstract class Course with _$Course {
     int idDriver,
     String depart,
     String arrivee,
+    String latLngDepart,
+    String latLngArrivee,
     double distance,
     double prixCourse,
     DateTime dateCourse,

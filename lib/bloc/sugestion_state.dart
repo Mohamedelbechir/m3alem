@@ -13,15 +13,20 @@ class SugestionEmpty extends SugestionState {
 
 class SugestedDrivers extends SugestionState {
   final List<ModelCardNotification> drivers;
-  SugestedDrivers({this.drivers = const []});
+  final Course currentCourse;
+  SugestedDrivers({this.drivers = const [], this.currentCourse});
   @override
   String toString() => "SugestedDrivers";
 
+  
+
   SugestedDrivers copyWith({
     List<ModelCardNotification> drivers,
+    Course currentCourse,
   }) {
     return SugestedDrivers(
       drivers: drivers ?? this.drivers,
+      currentCourse: currentCourse ?? this.currentCourse,
     );
   }
 }

@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:rxdart/rxdart.dart';
+
+import 'package:flutter/foundation.dart';
 import 'package:m3alem/models/freezed_classes.dart';
 
 import 'socket.dart';
@@ -7,10 +11,28 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketServiceDriver extends SocketService {
   dynamic _driverUnsubscribeWait;
+  static final SocketServiceDriver _instance = SocketServiceDriver._internal();
+  SocketServiceDriver._internal();
+  factory SocketServiceDriver() => _instance;
+  final _onLineSubject = BehaviorSubject<bool>();
+
+  StreamSubscription<bool> listenDriverStatus(void Function(bool) onData,
+      {Function onError, void Function() onDone, bool cancelOnError}) {
+    return _onLineSubject.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
+  }
+
+  void changeDriverStatus(bool newStatus) => _onLineSubject.add(newStatus);
+
   /* Le chafffeur écoute les notification des course */
-  driverSubscribForWait({OnSocketDriverCourseResponse callback}) {
+  driverSubscribForWait(
+      {@required OnSocketDriverCourseResponse callback, @required int cin}) {
     _driverUnsubscribeWait = client.subscribe(
-      destination: "/course/driver-course-waiting",
+      destination: "/course/driver-course-waiting/$cin",
       callback: (StompFrame frame) {
         final data = json.decode(frame.body);
         final course = Course.fromJson(data);
@@ -29,6 +51,8 @@ class SocketServiceDriver extends SocketService {
   }
 
   driverUnsubscribeForWait() {
-    _driverUnsubscribeWait();
+    try {
+      _driverUnsubscribeWait();
+    } catch (_) {}
   }
 }
