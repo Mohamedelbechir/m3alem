@@ -32,6 +32,13 @@ class SendResquestToDriver extends SugestionEvent {
   String toString() => "SendResquestToDriver";
 }
 
+class ResquestResponse extends SugestionEvent {
+  final Course course;
+  final bool confirmed;
+
+  ResquestResponse({this.course, this.confirmed});
+}
+
 class AddDriverSugestion extends SugestionEvent {
   final List<ModelCardNotification> drivers;
   final Course course;

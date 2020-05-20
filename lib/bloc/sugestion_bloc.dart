@@ -39,14 +39,26 @@ class SugestionBloc extends Bloc<SugestionEvent, SugestionState> {
       yield* _mapCommanderCourseToState(event);
     } else if (event is SendResquestToDriver) {
       yield* _mapSendResquestToDriverToState(event);
+    } else if (event is ResquestResponse) {
+      yield* _mapResquestResponseToState(event);
     } else if (event is ResetSugestion) {
       yield SugestionInitial();
     }
   }
 
+  Stream<SugestionState> _mapResquestResponseToState(
+      ResquestResponse event) async* {
+    yield RespondedRequest(event.course, event.confirmed);
+  }
+
   Stream<SugestionState> _mapSendResquestToDriverToState(
       SendResquestToDriver event) async* {
-    socket.passagerSendRequest(course: event.course);
+    socket.passagerSendRequest(
+      course: event.course,
+      callback: (course, confirmed) {
+        add(ResquestResponse(confirmed: confirmed, course: course));
+      },
+    );
   }
 
   Stream<SugestionState> _mapCommanderCourseToState(

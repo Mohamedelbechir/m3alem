@@ -1,8 +1,6 @@
 part of 'sugestion_bloc.dart';
 
-abstract class SugestionState {
-  SugestionState();
-}
+abstract class SugestionState extends Equatable {}
 
 class SugestionInitial extends SugestionState {}
 
@@ -18,8 +16,6 @@ class SugestedDrivers extends SugestionState {
   @override
   String toString() => "SugestedDrivers";
 
-  
-
   SugestedDrivers copyWith({
     List<ModelCardNotification> drivers,
     Course currentCourse,
@@ -29,4 +25,16 @@ class SugestedDrivers extends SugestionState {
       currentCourse: currentCourse ?? this.currentCourse,
     );
   }
+
+  @override
+  List get props => [this.currentCourse, drivers];
+}
+
+class RespondedRequest extends SugestionState {
+  final bool confirmed;
+  final Course course;
+
+  RespondedRequest(this.course, this.confirmed);
+  @override
+  List get props => [this.course, this.confirmed];
 }

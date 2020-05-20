@@ -14,7 +14,8 @@ class SocketServicePassager extends SocketService {
   factory SocketServicePassager() => _instance;
 
   passagerSendRequest(
-      {@required Course course,@required OnSocketPassagerCourseResponse callback}) {
+      {@required Course course,
+      @required OnSocketPassagerCourseResponse callback}) {
     /* pour être notifier en cas d'acceptation */
     _passagerUnsubscribeWaitDriver = client.subscribe(
       destination:
@@ -23,7 +24,7 @@ class SocketServicePassager extends SocketService {
         final data = json.decode(frame.body);
         final course = Course.fromJson(data);
         final confirmed = data["confirmed"];
-        callback(course: course, confirmed: confirmed);
+        callback(course, confirmed);
       },
     );
     /* Faire la commande */

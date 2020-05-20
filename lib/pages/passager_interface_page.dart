@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m3alem/bloc/authentification_bloc.dart';
 import 'package:m3alem/bloc/passager_map_bloc.dart';
+import 'package:m3alem/bloc/passagerhistorique_bloc.dart';
+import 'package:m3alem/bloc/profil_bloc.dart';
 import 'package:m3alem/bloc/sugestion_bloc.dart';
 import 'package:m3alem/google_map_services/google_map_service.dart';
 import 'package:m3alem/m3alem_keys.dart';
 import 'package:m3alem/pages/passager_history_page.dart';
 import 'package:m3alem/pages/passager_map_page.dart';
+import 'package:m3alem/pages/passager_profil_page.dart';
 import 'package:m3alem/pages/passager_setting_page.dart';
 import 'package:m3alem/repository/course_repository.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
@@ -50,8 +53,17 @@ class _PassagerInterfacePageState extends State<PassagerInterfacePage> {
         //  create: (context) => PassagerMapBloc()..add(DisplayPassagerMap()),
         child: PassagerMapPage(key: AppM3alemKeys.passagerMap),
       ),
-      PassagerHistoryPage(key: AppM3alemKeys.passagerHistory),
-      PassagerSettingPage(key: AppM3alemKeys.passagerSetting),
+      BlocProvider<PassagerhistoriqueBloc>(
+        create: (_) => PassagerhistoriqueBloc(),
+        child: PassagerHistoryPage(key: AppM3alemKeys.passagerHistory),
+      ),
+      BlocProvider<ProfilBloc>(
+        create: (context) => ProfilBloc(
+          utilisateurRepository: context.repository<UtilisateurRepository>(),
+          authentificationBloc: context.bloc<AuthentificationBloc>(),
+        ),
+        child: PassagerProfilPage(key: AppM3alemKeys.passagerSetting),
+      ),
     ];
     super.initState();
   }

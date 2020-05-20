@@ -21,7 +21,7 @@ class _DriverNotificationPageState extends State<DriverNotificationPage> {
   Widget build(BuildContext context) {
     context.bloc<NotifDriverBloc>().add(ToConsultedNotif());
     final state = context.bloc<NotifDriverBloc>().state;
-  /*  if (state is NotifLoaded) {
+    /*  if (state is NotifLoaded) {
       Future.microtask(
         () {
           showModalBottomSheet(
@@ -74,21 +74,23 @@ class _DriverNotificationPageState extends State<DriverNotificationPage> {
       );
     }*/
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.black,
-          child: Icon(Icons.remove_red_eye, color: Colors.white),
-          onPressed: () {}),
+      
       body: BlocBuilder<NotifDriverBloc, NotifDriverState>(
           builder: (context, state) {
         if (state is NotifLoaded)
           return Column(children: <Widget>[
             SizedBox(
-              height: 80,
+              height: 30,
             ),
             Expanded(
                 child: Column(
               children: <Widget>[
-                Text("Notifacation"),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 8),
+                    Text("Notification", style: TextStyle(fontSize: 30),),
+                  ],
+                ),
               ],
             )),
             Container(

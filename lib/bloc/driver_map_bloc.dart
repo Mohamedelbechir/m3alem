@@ -63,8 +63,6 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
       if (_iconCar == null) _iconCar = await PhoneService.loadBitmap('car.png');
       await _updateMarkers();
 
-      socket.changeDriverStatus(_currentUser.isOnLine);
-
       yield DriverMapLoaded(
         currentLatLng: _currentPosition,
         markers: _markers,
@@ -77,16 +75,20 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
 
   Stream<DriverMapState> _mapSwichDriverStateToState(
       SwichDriverState event) async* {
-    final result = await utilisateurRepository.setOnline(
-      authentificationBloc.currentUser.cin,
-      event.isOnLine,
-    );
-    authentificationBloc
-        .setCurrentUSer(_currentUser.copyWith(isOnLine: event.isOnLine));
+    //if ((state as DriverMapLoaded).isOnLine != event.isOnLine) {
+      final result = await utilisateurRepository.setOnline(
+        authentificationBloc.currentUser.cin,
+        event.isOnLine,
+      );
+      if (result) {
+        authentificationBloc
+            .setCurrentUSer(_currentUser.copyWith(isOnLine: event.isOnLine));
 
-    socket.changeDriverStatus(event.isOnLine);
+        socket.changeDriverStatus(event.isOnLine);
 
-    yield (state as DriverMapLoaded).copyWith(isOnLine: result);
+        yield (state as DriverMapLoaded).copyWith(isOnLine: event.isOnLine);
+      }
+   // }
   }
 
   Future<void> _updateMarkers({Marker marker}) async {

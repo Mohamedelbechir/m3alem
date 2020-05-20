@@ -39,7 +39,7 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
   initState() {
     final blocS = context.bloc<SugestionBloc>();
     final blocP = context.bloc<PassagerMapBloc>();
-
+    final parentContext = context;
     context.bloc<SugestionBloc>().listen(
       (state) {
         if (state is SugestedDrivers) {
@@ -75,11 +75,20 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
                               ...state.drivers
                                   .map((item) => CardNotificationDriver(
                                       model: item,
-                                      onValid: () {
+                                      onValid: ()  {
                                         blocS.add(
                                           SendResquestToDriver(state
                                               .currentCourse
                                               .copyWith(idDriver: item.cin)),
+                                        );
+                                         Navigator.pop(context);
+
+                                        Scaffold.of(parentContext).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Veullez patienter pour connaitre la confirmation du chauffeur'),
+                                            backgroundColor: Colors.lightBlue,
+                                          ),
                                         );
                                       }))
                                   .toList(),
@@ -107,6 +116,24 @@ class _PassagerMapPageState extends State<PassagerMapPage> {
                   backgroundColor: Colors.lightBlue,
                 ),
               ));
+        } else if (state is RespondedRequest) {
+          Future.microtask(() {
+            if (state.confirmed) {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Votre demande a été acceptée'),
+                  backgroundColor: Colors.lightGreen,
+                ),
+              );
+            } else {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Le chauffeur choisie n'est plus disponible"),
+                  backgroundColor: Colors.yellow,
+                ),
+              );
+            }
+          });
         }
       },
     );

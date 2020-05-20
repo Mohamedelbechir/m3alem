@@ -31,6 +31,7 @@ class SocketServiceDriver extends SocketService {
   /* Le chafffeur écoute les notification des course */
   driverSubscribForWait(
       {@required OnSocketDriverCourseResponse callback, @required int cin}) {
+    if (_driverUnsubscribeWait != null) _driverUnsubscribeWait();
     _driverUnsubscribeWait = client.subscribe(
       destination: "/course/driver-course-waiting/$cin",
       callback: (StompFrame frame) {

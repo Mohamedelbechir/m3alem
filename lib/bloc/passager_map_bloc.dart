@@ -65,17 +65,12 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
   ) async* {
     if (event is DisplayPassagerMap)
       yield* _mapDisplayPassagerMapToState(event: event);
-    else if (event is LongPress) yield* _mapLongPressToState(event);
-  }
-
-  Stream<PassagerMapState> _mapSendResquestToDriverToState(
-      SendResquestToDriver event) async* {
-    socket.passagerSendRequest(course: event.course);
+    else if (event is LongPress) {
+      yield* _mapLongPressToState(event);
+    }
   }
 
   Stream<PassagerMapState> _mapLongPressToState(LongPress event) async* {
-    
-    
     if (event.source == MarkerDragSourse.to)
       _toLatLng = event.latLng;
     else
@@ -233,7 +228,6 @@ class PassagerMapBloc extends Bloc<PassagerMapEvent, PassagerMapState> {
     return await googleMapServices.getPlaceDetail(placeId);
   }
 
-  Utilisateur get _currentUser => authentificationBloc.currentUser;
   LatLng get currentPosition => _fromLatLng;
 
   _initSocket() {
