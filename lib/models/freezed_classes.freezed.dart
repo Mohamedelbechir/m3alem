@@ -880,3 +880,206 @@ abstract class _ModelCardNotification implements ModelCardNotification {
   @override
   _$ModelCardNotificationCopyWith<_ModelCardNotification> get copyWith;
 }
+
+MyCreditCardModel _$MyCreditCardModelFromJson(Map<String, dynamic> json) {
+  return _MyCreditCardModel.fromJson(json);
+}
+
+class _$MyCreditCardModelTearOff {
+  const _$MyCreditCardModelTearOff();
+
+  _MyCreditCardModel call(
+      {String cardNumber,
+      String expiryDate,
+      String cardHolderName,
+      String codeInternet}) {
+    return _MyCreditCardModel(
+      cardNumber: cardNumber,
+      expiryDate: expiryDate,
+      cardHolderName: cardHolderName,
+      codeInternet: codeInternet,
+    );
+  }
+}
+
+// ignore: unused_element
+const $MyCreditCardModel = _$MyCreditCardModelTearOff();
+
+mixin _$MyCreditCardModel {
+  String get cardNumber;
+  String get expiryDate;
+  String get cardHolderName;
+  String get codeInternet;
+
+  Map<String, dynamic> toJson();
+  $MyCreditCardModelCopyWith<MyCreditCardModel> get copyWith;
+}
+
+abstract class $MyCreditCardModelCopyWith<$Res> {
+  factory $MyCreditCardModelCopyWith(
+          MyCreditCardModel value, $Res Function(MyCreditCardModel) then) =
+      _$MyCreditCardModelCopyWithImpl<$Res>;
+  $Res call(
+      {String cardNumber,
+      String expiryDate,
+      String cardHolderName,
+      String codeInternet});
+}
+
+class _$MyCreditCardModelCopyWithImpl<$Res>
+    implements $MyCreditCardModelCopyWith<$Res> {
+  _$MyCreditCardModelCopyWithImpl(this._value, this._then);
+
+  final MyCreditCardModel _value;
+  // ignore: unused_field
+  final $Res Function(MyCreditCardModel) _then;
+
+  @override
+  $Res call({
+    Object cardNumber = freezed,
+    Object expiryDate = freezed,
+    Object cardHolderName = freezed,
+    Object codeInternet = freezed,
+  }) {
+    return _then(_value.copyWith(
+      cardNumber:
+          cardNumber == freezed ? _value.cardNumber : cardNumber as String,
+      expiryDate:
+          expiryDate == freezed ? _value.expiryDate : expiryDate as String,
+      cardHolderName: cardHolderName == freezed
+          ? _value.cardHolderName
+          : cardHolderName as String,
+      codeInternet: codeInternet == freezed
+          ? _value.codeInternet
+          : codeInternet as String,
+    ));
+  }
+}
+
+abstract class _$MyCreditCardModelCopyWith<$Res>
+    implements $MyCreditCardModelCopyWith<$Res> {
+  factory _$MyCreditCardModelCopyWith(
+          _MyCreditCardModel value, $Res Function(_MyCreditCardModel) then) =
+      __$MyCreditCardModelCopyWithImpl<$Res>;
+  @override
+  $Res call(
+      {String cardNumber,
+      String expiryDate,
+      String cardHolderName,
+      String codeInternet});
+}
+
+class __$MyCreditCardModelCopyWithImpl<$Res>
+    extends _$MyCreditCardModelCopyWithImpl<$Res>
+    implements _$MyCreditCardModelCopyWith<$Res> {
+  __$MyCreditCardModelCopyWithImpl(
+      _MyCreditCardModel _value, $Res Function(_MyCreditCardModel) _then)
+      : super(_value, (v) => _then(v as _MyCreditCardModel));
+
+  @override
+  _MyCreditCardModel get _value => super._value as _MyCreditCardModel;
+
+  @override
+  $Res call({
+    Object cardNumber = freezed,
+    Object expiryDate = freezed,
+    Object cardHolderName = freezed,
+    Object codeInternet = freezed,
+  }) {
+    return _then(_MyCreditCardModel(
+      cardNumber:
+          cardNumber == freezed ? _value.cardNumber : cardNumber as String,
+      expiryDate:
+          expiryDate == freezed ? _value.expiryDate : expiryDate as String,
+      cardHolderName: cardHolderName == freezed
+          ? _value.cardHolderName
+          : cardHolderName as String,
+      codeInternet: codeInternet == freezed
+          ? _value.codeInternet
+          : codeInternet as String,
+    ));
+  }
+}
+
+@JsonSerializable()
+class _$_MyCreditCardModel implements _MyCreditCardModel {
+  _$_MyCreditCardModel(
+      {this.cardNumber,
+      this.expiryDate,
+      this.cardHolderName,
+      this.codeInternet});
+
+  factory _$_MyCreditCardModel.fromJson(Map<String, dynamic> json) =>
+      _$_$_MyCreditCardModelFromJson(json);
+
+  @override
+  final String cardNumber;
+  @override
+  final String expiryDate;
+  @override
+  final String cardHolderName;
+  @override
+  final String codeInternet;
+
+  @override
+  String toString() {
+    return 'MyCreditCardModel(cardNumber: $cardNumber, expiryDate: $expiryDate, cardHolderName: $cardHolderName, codeInternet: $codeInternet)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _MyCreditCardModel &&
+            (identical(other.cardNumber, cardNumber) ||
+                const DeepCollectionEquality()
+                    .equals(other.cardNumber, cardNumber)) &&
+            (identical(other.expiryDate, expiryDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.expiryDate, expiryDate)) &&
+            (identical(other.cardHolderName, cardHolderName) ||
+                const DeepCollectionEquality()
+                    .equals(other.cardHolderName, cardHolderName)) &&
+            (identical(other.codeInternet, codeInternet) ||
+                const DeepCollectionEquality()
+                    .equals(other.codeInternet, codeInternet)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(cardNumber) ^
+      const DeepCollectionEquality().hash(expiryDate) ^
+      const DeepCollectionEquality().hash(cardHolderName) ^
+      const DeepCollectionEquality().hash(codeInternet);
+
+  @override
+  _$MyCreditCardModelCopyWith<_MyCreditCardModel> get copyWith =>
+      __$MyCreditCardModelCopyWithImpl<_MyCreditCardModel>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_MyCreditCardModelToJson(this);
+  }
+}
+
+abstract class _MyCreditCardModel implements MyCreditCardModel {
+  factory _MyCreditCardModel(
+      {String cardNumber,
+      String expiryDate,
+      String cardHolderName,
+      String codeInternet}) = _$_MyCreditCardModel;
+
+  factory _MyCreditCardModel.fromJson(Map<String, dynamic> json) =
+      _$_MyCreditCardModel.fromJson;
+
+  @override
+  String get cardNumber;
+  @override
+  String get expiryDate;
+  @override
+  String get cardHolderName;
+  @override
+  String get codeInternet;
+  @override
+  _$MyCreditCardModelCopyWith<_MyCreditCardModel> get copyWith;
+}

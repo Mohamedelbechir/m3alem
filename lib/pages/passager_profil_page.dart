@@ -6,6 +6,7 @@ import 'package:m3alem/bloc/authentification_bloc.dart';
 import 'package:m3alem/widgets/custom_profil_numTel.dart';
 import 'package:m3alem/widgets/custom_profil_email.dart';
 import 'package:m3alem/widgets/custom_profil_fullName.dart';
+import 'package:m3alem/widgets/my_credit_card.dart';
 
 import 'package:m3alem/bloc/profil_bloc.dart';
 import 'package:m3alem/widgets/list_tile_profil.dart';
@@ -36,23 +37,20 @@ class _PassagerProfilPageState extends State<PassagerProfilPage> {
     final _authenticationBloc = BlocProvider.of<AuthentificationBloc>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Mon profil'),
-      ),
       body: BlocBuilder<ProfilBloc, ProfilState>(
         builder: (context, state) {
           if (state is ProfilDispladed) {
             _currentUser = state.user;
             return Column(
               children: <Widget>[
-                SizedBox(height: 20),
+                SizedBox(height: 50),
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
                     child: Container(
                       width: 80,
                       height: 80,
-                      color: Colors.green[300],
+                      color: Colors.black12,
                     ),
                   ),
                 ),
@@ -61,7 +59,7 @@ class _PassagerProfilPageState extends State<PassagerProfilPage> {
                   child: ListView(
                     children: <Widget>[
                       ListTileProfil(
-                        icon: Icon(Icons.account_circle, color: Colors.green),
+                        icon: Icon(Icons.account_circle),
                         label: 'Nom complet',
                         subTitle:
                             "Ceci correspond à notre nom qui sera visible par les autres utilisateurs de l'application",
@@ -69,7 +67,7 @@ class _PassagerProfilPageState extends State<PassagerProfilPage> {
                         onTap: _onChangeFullName,
                       ),
                       ListTileProfil(
-                        icon: Icon(Icons.perm_identity, color: Colors.green),
+                        icon: Icon(Icons.credit_card, color: Colors.black),
                         label: 'Card de crédit',
                         subTitle:
                             "Ceci correspond à votre login et ne sera donc pas visible par les autres utilisateurs",
@@ -77,13 +75,13 @@ class _PassagerProfilPageState extends State<PassagerProfilPage> {
                         onTap: () => _onChangeCreditCard(),
                       ),
                       ListTileProfil(
-                        icon: Icon(Icons.email, color: Colors.green),
+                        icon: Icon(Icons.email, color: Colors.black),
                         label: 'Adresse email',
                         value: '${_currentUser.email}',
                         onTap: () => _onChangeEmail(),
                       ),
                       ListTileProfil(
-                        icon: Icon(Icons.call, color: Colors.green),
+                        icon: Icon(Icons.call, color: Colors.black),
                         label: 'Numéro de téléphone',
                         value: '${_currentUser.tel}',
                         onTap: () => _onChangeTel(),
@@ -91,7 +89,7 @@ class _PassagerProfilPageState extends State<PassagerProfilPage> {
                       ),
                       Divider(),
                       ListTile(
-                        leading: Icon(Icons.security, color: Colors.green),
+                        leading: Icon(Icons.security, color: Colors.black),
                         title: Text('Changer le mot de passe',
                             style:
                                 TextStyle(color: Colors.black, fontSize: 17)),
@@ -106,10 +104,10 @@ class _PassagerProfilPageState extends State<PassagerProfilPage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: OutlineButton(
-                      borderSide: BorderSide(color: Colors.green),
+                      borderSide: BorderSide(color: Colors.black),
                       child: Text('Se déconnecter',
                           style: TextStyle(
-                              color: Colors.green,
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 20)),
                       shape: RoundedRectangleBorder(
@@ -185,7 +183,24 @@ class _PassagerProfilPageState extends State<PassagerProfilPage> {
     );
   }
 
-  _onChangeCreditCard() {}
+  _onChangeCreditCard() {
+    final _bloc = BlocProvider.of<ProfilBloc>(context);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: _shap,
+      builder: (context) => Container(
+        //padding: EdgeInsets.symmetric(vertical: 14,horizontal: 0),
+        child: MyCreditCardForm(
+          initialValue: MyCreditCardModel(),
+          onSave: (value) {
+            _bloc.add(UpdateCreditCard(value));
+          },
+        ),
+      ),
+    );
+  }
+
   _onChangeTel() {
     final ProfilBloc _bloc = BlocProvider.of<ProfilBloc>(context);
     showModalBottomSheet(

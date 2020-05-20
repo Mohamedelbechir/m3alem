@@ -16,18 +16,18 @@ class CustomButtomEditProfil extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           OutlineButton(
-              borderSide: BorderSide(color: Colors.green),
+              borderSide: BorderSide(color: Colors.black),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
                       bottom: Radius.circular(5), top: Radius.circular(5))),
               child: Text(
                 'ANNULLER',
-                style: TextStyle(color: Colors.green),
+                style: TextStyle(color: Colors.black),
               ),
               onPressed: () => Navigator.pop(context)),
           SizedBox(width: 5),
           RaisedButton(
-            color: Colors.green,
+            color: Colors.black,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
                     bottom: Radius.circular(5), top: Radius.circular(5))),

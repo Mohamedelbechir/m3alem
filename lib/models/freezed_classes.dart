@@ -57,3 +57,15 @@ abstract class ModelCardNotification with _$ModelCardNotification {
   factory ModelCardNotification.fromJson(Map<String, dynamic> json) =>
       _$ModelCardNotificationFromJson(json);
 }
+
+@freezed
+abstract class MyCreditCardModel with _$MyCreditCardModel {
+  factory MyCreditCardModel({
+    String cardNumber,
+    String expiryDate,
+    String cardHolderName,
+    String codeInternet,
+  }) = _MyCreditCardModel;
+  factory MyCreditCardModel.fromJson(Map<String, dynamic> json) =>
+      _$MyCreditCardModelFromJson(json);
+}

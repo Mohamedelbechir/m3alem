@@ -1,8 +1,6 @@
 part of 'profil_bloc.dart';
 
-abstract class ProfilEvent extends Equatable {
-  ProfilEvent([List props = const []]) : super(props);
-}
+abstract class ProfilEvent extends Equatable {}
 
 class DisplayProfil extends ProfilEvent {
   @override
@@ -20,33 +18,36 @@ class UpdateFullName extends ProfilEvent {
 
 class UpdateLogin extends ProfilEvent {
   String login;
-  UpdateLogin({this.login}) : super([login]);
+  UpdateLogin({this.login});
   @override
   String toString() => 'update login';
 }
 
 class UpdateEmail extends ProfilEvent {
   String email;
-  UpdateEmail({this.email}) : super([email]);
+  UpdateEmail({this.email});
   @override
   String toString() => 'update email';
 }
 
 class UpdatePhoneNumber extends ProfilEvent {
   String number;
-  UpdatePhoneNumber({this.number}) : super([number]);
+  UpdatePhoneNumber({this.number});
   @override
   String toString() => 'update email';
 }
 
 class UpdatePasseWord extends ProfilEvent {
   String passWord;
-  UpdatePasseWord({this.passWord}) : super([passWord]);
+  UpdatePasseWord({this.passWord});
   @override
   String toString() => 'update passWord';
 }
 
-class UpdateProfil extends ProfilEvent {
+class UpdateCreditCard extends ProfilEvent {
+  final MyCreditCardModel model;
+
+  UpdateCreditCard(this.model);
   @override
   String toString() => 'Mise à jour de du profil';
 }

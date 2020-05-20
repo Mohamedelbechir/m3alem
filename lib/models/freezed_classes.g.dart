@@ -95,3 +95,21 @@ Map<String, dynamic> _$_$_ModelCardNotificationToJson(
       'rating': instance.rating,
       'temps': instance.temps,
     };
+
+_$_MyCreditCardModel _$_$_MyCreditCardModelFromJson(Map<String, dynamic> json) {
+  return _$_MyCreditCardModel(
+    cardNumber: json['cardNumber'] as String,
+    expiryDate: json['expiryDate'] as String,
+    cardHolderName: json['cardHolderName'] as String,
+    codeInternet: json['codeInternet'] as String,
+  );
+}
+
+Map<String, dynamic> _$_$_MyCreditCardModelToJson(
+        _$_MyCreditCardModel instance) =>
+    <String, dynamic>{
+      'cardNumber': instance.cardNumber,
+      'expiryDate': instance.expiryDate,
+      'cardHolderName': instance.cardHolderName,
+      'codeInternet': instance.codeInternet,
+    };
