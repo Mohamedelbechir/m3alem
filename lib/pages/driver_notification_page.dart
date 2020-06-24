@@ -74,7 +74,6 @@ class _DriverNotificationPageState extends State<DriverNotificationPage> {
       );
     }*/
     return Scaffold(
-      
       body: BlocBuilder<NotifDriverBloc, NotifDriverState>(
           builder: (context, state) {
         if (state is NotifLoaded)
@@ -82,24 +81,32 @@ class _DriverNotificationPageState extends State<DriverNotificationPage> {
             SizedBox(
               height: 30,
             ),
-            Expanded(
-                child: Column(
+            Row(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    SizedBox(width: 8),
-                    Text("Notification", style: TextStyle(fontSize: 30),),
-                  ],
+                SizedBox(width: 8),
+                Text(
+                  "Notification",
+                  style: TextStyle(fontSize: 20),
                 ),
               ],
-            )),
-            Container(
-              height: 250,
-              child: Align(
-                alignment: Alignment(0.2, 0.6),
+            ),
+             SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: Card(
+                margin: EdgeInsets.all(0),
+                elevation: 10,
+                
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0)),
+                ),
                 child: ListView(
                   shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
+                  scrollDirection: Axis.vertical,
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
                   children: <Widget>[
                     SizedBox(
                       width: 100,
@@ -113,9 +120,6 @@ class _DriverNotificationPageState extends State<DriverNotificationPage> {
                   ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: 80,
             ),
           ]);
         return Container(child: Text('Aucune notification à afficher'));

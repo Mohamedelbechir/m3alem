@@ -240,7 +240,7 @@ class _MyCreditCardWidgetState extends State<MyCreditCardWidget>
   ) {
     final TextStyle defaultTextStyle = Theme.of(context).textTheme.title.merge(
           TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontFamily: 'halter',
             fontSize: 16,
             package: 'flutter_credit_card',
@@ -297,16 +297,29 @@ class _MyCreditCardWidgetState extends State<MyCreditCardWidget>
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: Text(
-                widget.cardHolderName.isEmpty || widget.cardHolderName == null
-                    ? 'CARD HOLDER'
-                    : widget.cardHolderName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: widget.textStyle ?? defaultTextStyle,
-              ),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    child: Text(
+                      widget.cardHolderName.isEmpty ||
+                              widget.cardHolderName == null
+                          ? 'CARD HOLDER'
+                          : widget.cardHolderName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: widget.textStyle ?? defaultTextStyle,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  child: _getMasterIcon(),
+                )
+              ],
             ),
           ),
         ],
@@ -320,7 +333,7 @@ class _MyCreditCardWidgetState extends State<MyCreditCardWidget>
   Map<CardType, Set<List<String>>> cardNumPatterns =
       <CardType, Set<List<String>>>{
     CardType.poste: <List<String>>{
-      <String>['4','53', '5'],
+      <String>['53'],
     },
     CardType.biat: <List<String>>{
       <String>['34'],
@@ -385,7 +398,7 @@ class _MyCreditCardWidgetState extends State<MyCreditCardWidget>
     switch (detectCCType(cardNumber)) {
       case CardType.poste:
         icon = Image.asset(
-          'img/postTN.png',
+          'assets/img/posteTN.png',
           height: 48,
           width: 48,
         );
@@ -403,6 +416,9 @@ class _MyCreditCardWidgetState extends State<MyCreditCardWidget>
 
     return icon;
   }
+
+  Widget _getMasterIcon() =>
+      Image.asset('assets/img/mastercard.png', height: 48, width: 48);
 }
 
 class AnimationCard extends StatelessWidget {

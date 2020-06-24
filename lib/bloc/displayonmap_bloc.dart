@@ -39,7 +39,6 @@ class DisplayOnMapBloc extends Bloc<DisplayOnMapEvent, DisplayOnMapState> {
           await _getMarker(name: "Depart", position: toLg, type: MyIconType.to);
       List<LatLng> latLngs =
           await googleMapServices.getRouteCoordinates(fromLg, toLg);
-      int k = 5;
       yield MapDisplayed(
         markers: {fromMarker, toMarker},
         polyLines: {

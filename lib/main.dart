@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m3alem/bloc/authentification_bloc.dart';
 import 'package:m3alem/bloc/authentification_event.dart';
 import 'package:m3alem/bloc/authentification_state.dart';
+import 'package:m3alem/pages/account_blocked_page.dart';
 import 'package:m3alem/pages/account_progression_page.dart';
 import 'package:m3alem/pages/passager_interface_page.dart';
 import 'package:m3alem/pages/complete_dossier.dart';
@@ -125,6 +126,10 @@ class MyApp extends StatelessWidget {
           }
           if (state is ImcompletedAccount) {
             return ImcompletCompletDossier();
+          }
+          if(state is BlockedAccount){
+            
+             return AccountBlockedPage(message: state.message,);
           }
           return SplashPage();
         },

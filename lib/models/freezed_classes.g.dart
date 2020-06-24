@@ -75,6 +75,34 @@ Map<String, dynamic> _$_$_CourseToJson(_$_Course instance) => <String, dynamic>{
       'dateCourse': instance.dateCourse?.toIso8601String(),
     };
 
+_$_CourseHistorique _$_$_CourseHistoriqueFromJson(Map<String, dynamic> json) {
+  return _$_CourseHistorique(
+    id: json['id'] as int,
+    nomDriver: json['nomDriver'] as String,
+    nomPassager: json['nomPassager'] as String,
+    dateCourse: json['dateCourse'] == null
+        ? null
+        : DateTime.parse(json['dateCourse'] as String),
+    distance: (json['distance'] as num)?.toDouble(),
+    prixCourse: (json['prixCourse'] as num)?.toDouble(),
+    depart: json['depart'] as String,
+    arrivee: json['arrivee'] as String,
+  );
+}
+
+Map<String, dynamic> _$_$_CourseHistoriqueToJson(
+        _$_CourseHistorique instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'nomDriver': instance.nomDriver,
+      'nomPassager': instance.nomPassager,
+      'dateCourse': instance.dateCourse?.toIso8601String(),
+      'distance': instance.distance,
+      'prixCourse': instance.prixCourse,
+      'depart': instance.depart,
+      'arrivee': instance.arrivee,
+    };
+
 _$_ModelCardNotification _$_$_ModelCardNotificationFromJson(
     Map<String, dynamic> json) {
   return _$_ModelCardNotification(

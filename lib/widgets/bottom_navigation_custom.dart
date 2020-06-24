@@ -48,16 +48,18 @@ class CustumBottomNavigation extends StatelessWidget {
           Icon(Icons.notifications),
           ((state is NotifLoaded) && state.consulted)
               ? Container(width: 0)
-              : Positioned(
-                  top: 2,
-                  right: 2,
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(8)),
-                  ))
+              : (state is NotifDriverInitial)
+                  ? Container(width: 0)
+                  : Positioned(
+                      top: 2,
+                      right: 2,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(8)),
+                      ))
         ]);
       }),
       activeIcon: Icon(Icons.notifications, color: Colors.black, size: 30),

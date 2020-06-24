@@ -7,6 +7,7 @@ class AppM3alemKeys {
 
   static final driverMap = const Key('__driverMap__');
   static final driverMoney = const Key('__driverMoney__');
+  static final driverHistory = const Key('__driverHistory__');
   static final driverNotification = const Key('__driverNotification__');
   static final driverSetting = const Key('__driverSetting__');
 

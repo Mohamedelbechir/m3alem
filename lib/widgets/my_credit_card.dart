@@ -4,6 +4,7 @@ import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:m3alem/models/freezed_classes.dart';
 import 'package:m3alem/widgets/my_credit_card_widget.dart';
+import 'package:m3alem/widgets/my_credit_custom_form.dart';
 
 class MyCreditCardForm extends StatefulWidget {
   final MyCreditCardModel initialValue;
@@ -43,11 +44,13 @@ class _MyCreditCardFormState extends State<MyCreditCardForm> {
                 cardHolderName: cardHolderName,
                 cvvCode: cvvCode,
                 showBackView: isCvvFocused,
+                cardBgColor: Colors.grey[400],
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  child: CreditCardForm(
-                    onCreditCardModelChange: onCreditCardModelChange,
+                  child: MyCustumCreditCardForm(
+                    onCreditCardModelChange: (value, isCvvFocused) =>
+                        onCreditCardModelChange(value, isCvvFocused),
                   ),
                 ),
               )
@@ -58,13 +61,14 @@ class _MyCreditCardFormState extends State<MyCreditCardForm> {
     );
   }
 
-  void onCreditCardModelChange(CreditCardModel creditCardModel) {
+  void onCreditCardModelChange(
+      MyCreditCardModel creditCardModel, bool isFocused) {
     setState(() {
       cardNumber = creditCardModel.cardNumber;
       expiryDate = creditCardModel.expiryDate;
       cardHolderName = creditCardModel.cardHolderName;
-      cvvCode = creditCardModel.cvvCode;
-      isCvvFocused = creditCardModel.isCvvFocused;
+      cvvCode = creditCardModel.codeInternet;
+      isCvvFocused = isFocused;
     });
   }
 }

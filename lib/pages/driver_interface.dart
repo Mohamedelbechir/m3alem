@@ -1,6 +1,8 @@
+import 'package:m3alem/bloc/driverhistorique_bloc.dart';
 import 'package:m3alem/bloc/notifdriver_bloc.dart';
 import 'package:m3alem/pages/driver_historique_page.dart';
 import 'package:m3alem/pages/driver_notification_page.dart';
+import 'package:m3alem/repository/course_repository.dart';
 import 'package:m3alem/socket/socket_service_driver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +38,13 @@ class _DriverInterfaceState extends State<DriverInterface> {
         child: DriverMapPage(key: AppM3alemKeys.driverMap),
       ),
       DriverMoneyPage(key: AppM3alemKeys.driverMoney),
-      DriverHistoriquePage(key: AppM3alemKeys.driverMoney),
+      BlocProvider<DriverhistoriqueBloc>(
+        create: (context) => DriverhistoriqueBloc(
+          authentificationBloc: context.bloc<AuthentificationBloc>(),
+          courseRespository: context.repository<CourseRespository>(),
+        )..add(DisplayDriverHistoriquePage()),
+        child: DriverHistoriquePage(key: AppM3alemKeys.driverHistory),
+      ),
       DriverNotificationPage(key: AppM3alemKeys.driverNotification),
       DriverSettingPage(key: AppM3alemKeys.driverSetting),
     ];

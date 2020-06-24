@@ -34,14 +34,19 @@ class AccountIncomplet extends AuthentificationEvent {
   @override
   String toString() => "CountIncomplet";
 }
+
 class AccountCompleted extends AuthentificationEvent {
   final Utilisateur utilisateur;
   AccountCompleted({@required this.utilisateur}) : super([utilisateur]);
   @override
   String toString() => "AccountCompleted";
 }
-class DisplayAccountProgress extends AuthentificationEvent {
 
+class AccountBocked extends AuthentificationEvent {
+  String toString() => "AccountBocked";
+}
+
+class DisplayAccountProgress extends AuthentificationEvent {
   @override
   String toString() => "DisplayAccountProgress";
 }

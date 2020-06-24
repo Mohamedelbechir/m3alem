@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class AuthentificationState extends Equatable {
   @override
@@ -42,4 +43,11 @@ class AccountProgress extends AuthentificationState {
   AccountProgress({this.message, this.etat});
   @override
   String toString() => "ImcompletedAccount";
+}
+
+class BlockedAccount extends AuthentificationState {
+  final String message;
+  BlockedAccount({@required this.message});
+  @override
+  String toString() => "BlockedAccount";
 }

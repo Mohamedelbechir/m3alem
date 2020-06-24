@@ -25,31 +25,40 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is LoginButtonPressed) {
-      yield LoginLoading();
+      yield* _mapLoginButtonPressedToState(event);
+    }
+  }
 
-      try {
-        final utilisateur = await utilisateurRepository.authenticate(
-          username: event.username,
-          password: event.password,
-        );
-        if (utilisateur == null)
-          yield LoginFailure(error: 'Login ou mot de passe incorrect');
-        else if (utilisateur.typeUtilisateur == TypeUtilisateur.passager) {
-          authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
-        } else {
-          // c'est un chauffeur
-          if (utilisateur.etatInscription ==
-              EtatInscription.enAttenteInscription)
-            authentificationBloc
-                .add(AccountIncomplet(utilisateur: utilisateur));
-          else {
+  Stream<LoginState> _mapLoginButtonPressedToState(
+      LoginButtonPressed event) async* {
+    yield LoginLoading();
+
+    try {
+      final utilisateur = await utilisateurRepository.authenticate(
+        username: event.username,
+        password: event.password,
+      );
+      if (utilisateur == null)
+        yield LoginFailure(error: 'Login ou mot de passe incorrect');
+      else if (utilisateur.typeUtilisateur == TypeUtilisateur.passager) {
+        // passager
+        authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
+      } else {
+        // c'est un chauffeur
+        if (utilisateur.etatInscription == EtatInscription.enAttenteInscription)
+          authentificationBloc.add(AccountIncomplet(utilisateur: utilisateur));
+        else {
+          // verifier si le compte est bloqué
+          if (utilisateur.etatCompte == EtatCompte.blocked) {
+            authentificationBloc.add(AccountBocked());
+          } else {
             authentificationBloc.add(LoggedIn(utilisateur: utilisateur));
             yield LoginInitial();
           }
         }
-      } catch (error) {
-        yield LoginFailure(error: error.toString());
       }
+    } catch (error) {
+      yield LoginFailure(error: error.toString());
     }
   }
 }

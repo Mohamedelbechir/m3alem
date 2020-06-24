@@ -1,6 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:m3alem/models/freezed_classes.dart';
 
+part of 'register_bloc.dart';
 abstract class RegisterEvent extends Equatable {
    RegisterEvent();
 }

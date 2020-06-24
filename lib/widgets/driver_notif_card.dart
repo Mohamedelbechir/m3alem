@@ -21,9 +21,10 @@ class _DriverNotifCardState extends State<DriverNotifCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 250,
       child: Card(
-        elevation: 8,
+        // elevation: 8,
+
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: Container(
           width: 280,
@@ -33,6 +34,7 @@ class _DriverNotifCardState extends State<DriverNotifCard> {
           child: Column(
             children: <Widget>[
               Row(
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RichText(
                     text: TextSpan(
@@ -73,33 +75,36 @@ class _DriverNotifCardState extends State<DriverNotifCard> {
                   )
                 ],
               ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  OutlineButton(
-                      child: Text('voir sur map'),
-                      onPressed: () async {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return BlocProvider<DisplayOnMapBloc>(
-                            create: (context) => DisplayOnMapBloc()
-                              ..add(DisplayOnMap(widget.course)),
-                            child: DiplayOnMap(),
-                          );
-                        }));
-                      }),
-                  RaisedButton(
-                      color: Colors.black,
-                      child: Text('accepter',
-                          style: TextStyle(color: Colors.white)),
-                      onPressed: () {
-                        context
-                            .bloc<NotifDriverBloc>()
-                            .add(AccepterCourse(widget.course));
-                      })
+                  Expanded(
+                    child: OutlineButton(
+                        child: Text('voir sur map'),
+                        onPressed: () async {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return BlocProvider<DisplayOnMapBloc>(
+                              create: (context) => DisplayOnMapBloc()
+                                ..add(DisplayOnMap(widget.course)),
+                              child: DiplayOnMap(),
+                            );
+                          }));
+                        }),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: RaisedButton(
+                        color: Colors.black,
+                        child: Text('accepter',
+                            style: TextStyle(color: Colors.white)),
+                        onPressed: () {
+                          context
+                              .bloc<NotifDriverBloc>()
+                              .add(AccepterCourse(widget.course));
+                        }),
+                  )
                 ],
               )
             ],

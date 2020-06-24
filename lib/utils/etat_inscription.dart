@@ -4,3 +4,8 @@ class EtatInscription {
   static final refuserInscription = "REFUSER";
   static final inconnuInscription = "INCONNU";
 }
+
+class EtatCompte {
+  static final blocked = "BLOCKED";
+  static final actived = "ACTIVATED";
+}

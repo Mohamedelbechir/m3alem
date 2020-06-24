@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:m3alem/models/freezed_classes.dart';
+
+part of 'register_bloc.dart';
 
 abstract class RegisterState extends Equatable {
   RegisterState();
@@ -23,8 +23,5 @@ class RegisterSuccess extends RegisterState {
 }
 class RegisterError extends RegisterState{
   final String message;
-  RegisterError({this.message});
-  @override
-  List get props => [this.message];
-  
+  RegisterError({this.message});  
 }

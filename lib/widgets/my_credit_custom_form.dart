@@ -21,7 +21,7 @@ class MyCustumCreditCardForm extends StatefulWidget {
   final String expiryDate;
   final String cardHolderName;
   final String codeInternet;
-  final void Function(MyCreditCardModel) onCreditCardModelChange;
+  final void Function(MyCreditCardModel, bool) onCreditCardModelChange;
   final Color themeColor;
   final Color textColor;
   final Color cursorColor;
@@ -38,7 +38,7 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
   bool isCvvFocused = false;
   Color themeColor;
 
-  void Function(MyCreditCardModel) onCreditCardModelChange;
+  void Function(MyCreditCardModel, bool) onCreditCardModelChange;
   MyCreditCardModel creditCardModel;
 
   final MaskedTextController _cardNumberController =
@@ -53,8 +53,8 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
   FocusNode cvvFocusNode = FocusNode();
 
   void textFieldFocusDidChange() {
-    // creditCardModel.isCvvFocused = cvvFocusNode.hasFocus;
-    onCreditCardModelChange(creditCardModel);
+    
+    onCreditCardModelChange(creditCardModel, cvvFocusNode.hasFocus);
   }
 
   void createCreditCardModel() {
@@ -86,7 +86,7 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
       setState(() {
         cardNumber = _cardNumberController.text;
         creditCardModel = creditCardModel.copyWith(cardNumber: cardNumber);
-        onCreditCardModelChange(creditCardModel);
+        onCreditCardModelChange(creditCardModel, cvvFocusNode.hasFocus);
       });
     });
 
@@ -94,7 +94,7 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
       setState(() {
         expiryDate = _expiryDateController.text;
         creditCardModel = creditCardModel.copyWith(expiryDate: expiryDate);
-        onCreditCardModelChange(creditCardModel);
+        onCreditCardModelChange(creditCardModel, cvvFocusNode.hasFocus);
       });
     });
 
@@ -103,7 +103,7 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
         cardHolderName = _cardHolderNameController.text;
         creditCardModel =
             creditCardModel.copyWith(cardHolderName: cardHolderName);
-        onCreditCardModelChange(creditCardModel);
+        onCreditCardModelChange(creditCardModel, cvvFocusNode.hasFocus);
       });
     });
 
@@ -112,7 +112,7 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
         codeInternet = _codeInternetController.text;
 
         creditCardModel = creditCardModel.copyWith(codeInternet: codeInternet);
-        onCreditCardModelChange(creditCardModel);
+        onCreditCardModelChange(creditCardModel, cvvFocusNode.hasFocus);
       });
     });
   }
@@ -143,7 +143,6 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
                   color: widget.textColor,
                 ),
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
                   labelText: 'Card number',
                   hintText: 'xxxx xxxx xxxx xxxx',
                 ),
@@ -161,7 +160,6 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
                   color: widget.textColor,
                 ),
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
                     labelText: 'Expired Date',
                     hintText: 'MM/YY'),
                 keyboardType: TextInputType.number,
@@ -179,7 +177,6 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
                   color: widget.textColor,
                 ),
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
                   labelText: 'CVV',
                   hintText: 'XXXX',
                 ),
@@ -202,7 +199,6 @@ class _MyCustumCreditCardFormState extends State<MyCustumCreditCardForm> {
                   color: widget.textColor,
                 ),
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
                   labelText: 'Card Holder',
                 ),
                 keyboardType: TextInputType.text,

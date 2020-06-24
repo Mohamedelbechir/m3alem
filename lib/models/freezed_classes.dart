@@ -46,6 +46,22 @@ abstract class Course with _$Course {
 }
 
 @freezed
+abstract class CourseHistorique with _$CourseHistorique {
+  const factory CourseHistorique({
+    int id,
+    String nomDriver,
+    String nomPassager,
+    DateTime dateCourse,
+    double distance,
+    double prixCourse,
+    String depart, 
+    String arrivee,
+  }) = _CourseHistorique;
+  factory CourseHistorique.fromJson(Map<String, dynamic> json) =>
+      _$CourseHistoriqueFromJson(json);
+}
+
+@freezed
 abstract class ModelCardNotification with _$ModelCardNotification {
   const factory ModelCardNotification({
     int cin,
@@ -57,7 +73,7 @@ abstract class ModelCardNotification with _$ModelCardNotification {
   factory ModelCardNotification.fromJson(Map<String, dynamic> json) =>
       _$ModelCardNotificationFromJson(json);
 }
-
+ 
 @freezed
 abstract class MyCreditCardModel with _$MyCreditCardModel {
   factory MyCreditCardModel({

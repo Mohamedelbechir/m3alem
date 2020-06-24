@@ -687,6 +687,276 @@ abstract class _Course implements Course {
   _$CourseCopyWith<_Course> get copyWith;
 }
 
+CourseHistorique _$CourseHistoriqueFromJson(Map<String, dynamic> json) {
+  return _CourseHistorique.fromJson(json);
+}
+
+class _$CourseHistoriqueTearOff {
+  const _$CourseHistoriqueTearOff();
+
+  _CourseHistorique call(
+      {int id,
+      String nomDriver,
+      String nomPassager,
+      DateTime dateCourse,
+      double distance,
+      double prixCourse,
+      String depart,
+      String arrivee}) {
+    return _CourseHistorique(
+      id: id,
+      nomDriver: nomDriver,
+      nomPassager: nomPassager,
+      dateCourse: dateCourse,
+      distance: distance,
+      prixCourse: prixCourse,
+      depart: depart,
+      arrivee: arrivee,
+    );
+  }
+}
+
+// ignore: unused_element
+const $CourseHistorique = _$CourseHistoriqueTearOff();
+
+mixin _$CourseHistorique {
+  int get id;
+  String get nomDriver;
+  String get nomPassager;
+  DateTime get dateCourse;
+  double get distance;
+  double get prixCourse;
+  String get depart;
+  String get arrivee;
+
+  Map<String, dynamic> toJson();
+  $CourseHistoriqueCopyWith<CourseHistorique> get copyWith;
+}
+
+abstract class $CourseHistoriqueCopyWith<$Res> {
+  factory $CourseHistoriqueCopyWith(
+          CourseHistorique value, $Res Function(CourseHistorique) then) =
+      _$CourseHistoriqueCopyWithImpl<$Res>;
+  $Res call(
+      {int id,
+      String nomDriver,
+      String nomPassager,
+      DateTime dateCourse,
+      double distance,
+      double prixCourse,
+      String depart,
+      String arrivee});
+}
+
+class _$CourseHistoriqueCopyWithImpl<$Res>
+    implements $CourseHistoriqueCopyWith<$Res> {
+  _$CourseHistoriqueCopyWithImpl(this._value, this._then);
+
+  final CourseHistorique _value;
+  // ignore: unused_field
+  final $Res Function(CourseHistorique) _then;
+
+  @override
+  $Res call({
+    Object id = freezed,
+    Object nomDriver = freezed,
+    Object nomPassager = freezed,
+    Object dateCourse = freezed,
+    Object distance = freezed,
+    Object prixCourse = freezed,
+    Object depart = freezed,
+    Object arrivee = freezed,
+  }) {
+    return _then(_value.copyWith(
+      id: id == freezed ? _value.id : id as int,
+      nomDriver: nomDriver == freezed ? _value.nomDriver : nomDriver as String,
+      nomPassager:
+          nomPassager == freezed ? _value.nomPassager : nomPassager as String,
+      dateCourse:
+          dateCourse == freezed ? _value.dateCourse : dateCourse as DateTime,
+      distance: distance == freezed ? _value.distance : distance as double,
+      prixCourse:
+          prixCourse == freezed ? _value.prixCourse : prixCourse as double,
+      depart: depart == freezed ? _value.depart : depart as String,
+      arrivee: arrivee == freezed ? _value.arrivee : arrivee as String,
+    ));
+  }
+}
+
+abstract class _$CourseHistoriqueCopyWith<$Res>
+    implements $CourseHistoriqueCopyWith<$Res> {
+  factory _$CourseHistoriqueCopyWith(
+          _CourseHistorique value, $Res Function(_CourseHistorique) then) =
+      __$CourseHistoriqueCopyWithImpl<$Res>;
+  @override
+  $Res call(
+      {int id,
+      String nomDriver,
+      String nomPassager,
+      DateTime dateCourse,
+      double distance,
+      double prixCourse,
+      String depart,
+      String arrivee});
+}
+
+class __$CourseHistoriqueCopyWithImpl<$Res>
+    extends _$CourseHistoriqueCopyWithImpl<$Res>
+    implements _$CourseHistoriqueCopyWith<$Res> {
+  __$CourseHistoriqueCopyWithImpl(
+      _CourseHistorique _value, $Res Function(_CourseHistorique) _then)
+      : super(_value, (v) => _then(v as _CourseHistorique));
+
+  @override
+  _CourseHistorique get _value => super._value as _CourseHistorique;
+
+  @override
+  $Res call({
+    Object id = freezed,
+    Object nomDriver = freezed,
+    Object nomPassager = freezed,
+    Object dateCourse = freezed,
+    Object distance = freezed,
+    Object prixCourse = freezed,
+    Object depart = freezed,
+    Object arrivee = freezed,
+  }) {
+    return _then(_CourseHistorique(
+      id: id == freezed ? _value.id : id as int,
+      nomDriver: nomDriver == freezed ? _value.nomDriver : nomDriver as String,
+      nomPassager:
+          nomPassager == freezed ? _value.nomPassager : nomPassager as String,
+      dateCourse:
+          dateCourse == freezed ? _value.dateCourse : dateCourse as DateTime,
+      distance: distance == freezed ? _value.distance : distance as double,
+      prixCourse:
+          prixCourse == freezed ? _value.prixCourse : prixCourse as double,
+      depart: depart == freezed ? _value.depart : depart as String,
+      arrivee: arrivee == freezed ? _value.arrivee : arrivee as String,
+    ));
+  }
+}
+
+@JsonSerializable()
+class _$_CourseHistorique implements _CourseHistorique {
+  const _$_CourseHistorique(
+      {this.id,
+      this.nomDriver,
+      this.nomPassager,
+      this.dateCourse,
+      this.distance,
+      this.prixCourse,
+      this.depart,
+      this.arrivee});
+
+  factory _$_CourseHistorique.fromJson(Map<String, dynamic> json) =>
+      _$_$_CourseHistoriqueFromJson(json);
+
+  @override
+  final int id;
+  @override
+  final String nomDriver;
+  @override
+  final String nomPassager;
+  @override
+  final DateTime dateCourse;
+  @override
+  final double distance;
+  @override
+  final double prixCourse;
+  @override
+  final String depart;
+  @override
+  final String arrivee;
+
+  @override
+  String toString() {
+    return 'CourseHistorique(id: $id, nomDriver: $nomDriver, nomPassager: $nomPassager, dateCourse: $dateCourse, distance: $distance, prixCourse: $prixCourse, depart: $depart, arrivee: $arrivee)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _CourseHistorique &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.nomDriver, nomDriver) ||
+                const DeepCollectionEquality()
+                    .equals(other.nomDriver, nomDriver)) &&
+            (identical(other.nomPassager, nomPassager) ||
+                const DeepCollectionEquality()
+                    .equals(other.nomPassager, nomPassager)) &&
+            (identical(other.dateCourse, dateCourse) ||
+                const DeepCollectionEquality()
+                    .equals(other.dateCourse, dateCourse)) &&
+            (identical(other.distance, distance) ||
+                const DeepCollectionEquality()
+                    .equals(other.distance, distance)) &&
+            (identical(other.prixCourse, prixCourse) ||
+                const DeepCollectionEquality()
+                    .equals(other.prixCourse, prixCourse)) &&
+            (identical(other.depart, depart) ||
+                const DeepCollectionEquality().equals(other.depart, depart)) &&
+            (identical(other.arrivee, arrivee) ||
+                const DeepCollectionEquality().equals(other.arrivee, arrivee)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(nomDriver) ^
+      const DeepCollectionEquality().hash(nomPassager) ^
+      const DeepCollectionEquality().hash(dateCourse) ^
+      const DeepCollectionEquality().hash(distance) ^
+      const DeepCollectionEquality().hash(prixCourse) ^
+      const DeepCollectionEquality().hash(depart) ^
+      const DeepCollectionEquality().hash(arrivee);
+
+  @override
+  _$CourseHistoriqueCopyWith<_CourseHistorique> get copyWith =>
+      __$CourseHistoriqueCopyWithImpl<_CourseHistorique>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_CourseHistoriqueToJson(this);
+  }
+}
+
+abstract class _CourseHistorique implements CourseHistorique {
+  const factory _CourseHistorique(
+      {int id,
+      String nomDriver,
+      String nomPassager,
+      DateTime dateCourse,
+      double distance,
+      double prixCourse,
+      String depart,
+      String arrivee}) = _$_CourseHistorique;
+
+  factory _CourseHistorique.fromJson(Map<String, dynamic> json) =
+      _$_CourseHistorique.fromJson;
+
+  @override
+  int get id;
+  @override
+  String get nomDriver;
+  @override
+  String get nomPassager;
+  @override
+  DateTime get dateCourse;
+  @override
+  double get distance;
+  @override
+  double get prixCourse;
+  @override
+  String get depart;
+  @override
+  String get arrivee;
+  @override
+  _$CourseHistoriqueCopyWith<_CourseHistorique> get copyWith;
+}
+
 ModelCardNotification _$ModelCardNotificationFromJson(
     Map<String, dynamic> json) {
   return _ModelCardNotification.fromJson(json);

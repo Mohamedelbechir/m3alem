@@ -40,10 +40,22 @@ class AuthentificationBloc
     } else if (event is AccountIncomplet) {
       yield* _mapAccountIncompletToState(event);
     } else if (event is AccountCompleted) {
-      yield* _mapToHomeState();
+      yield* _mapAccountCompletedToState(event);
     } else if (event is DisplayAccountProgress) {
       yield* _mapDisplayAccountProgressToState(event: event);
+    } else if (event is AccountBocked) {
+      yield* _mapAccountBockedToState(event: event);
     }
+  }
+
+  Stream<AuthentificationState> _mapAccountBockedToState(
+      {AccountBocked event}) async* {
+    yield BlockedAccount(message: "Votre compte a été bloqué");
+  }
+  Stream<AuthentificationState> _mapAccountCompletedToState(
+      AccountCompleted event) async* {
+    _currentUtilisateur = event.utilisateur;
+    yield* _mapToHomeState();
   }
 
   Stream<AuthentificationState> _mapLoggedOutToState(LoggedOut event) async* {
@@ -88,16 +100,16 @@ class AuthentificationBloc
     _currentUtilisateur = event.utilisateur;
     yield ImcompletedAccount();
     /*  try {
-            final user = await this
-                .utilisateurRepository
-                .add((event as AddResgister).utilisateur);
-            if (user != null)
-              yield RegisterSuccess(utilisateur: user);
-            else
-              yield RegisterError(message: "Echec lors de votre inscription");
-          } catch (_) {
-            yield RegisterError(message: "Echec lors de votre inscription");
-          } */
+                        final user = await this
+                            .utilisateurRepository
+                            .add((event as AddResgister).utilisateur);
+                        if (user != null)
+                          yield RegisterSuccess(utilisateur: user);
+                        else
+                          yield RegisterError(message: "Echec lors de votre inscription");
+                      } catch (_) {
+                        yield RegisterError(message: "Echec lors de votre inscription");
+                      } */
   }
 
   Stream<AuthentificationState> _mapDisplayAccountProgressToState(

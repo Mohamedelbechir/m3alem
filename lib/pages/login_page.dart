@@ -7,7 +7,6 @@ import 'package:m3alem/bloc/login_bloc.dart';
 import 'package:m3alem/bloc/login_event.dart';
 import 'package:m3alem/bloc/login_state.dart';
 import 'package:m3alem/bloc/register_bloc.dart';
-import 'package:m3alem/bloc/register_event.dart';
 import 'package:m3alem/models/freezed_classes.dart';
 import 'package:m3alem/repository/utilisateur_repository.dart';
 import 'package:m3alem/utils/bubble_indication_painter.dart.dart';
@@ -571,318 +570,336 @@ class _LiginSignUpState extends State<LiginSignUp> {
     List<String> _listSexe = ["masculin", "féminin"];
     final bloc = BlocProvider.of<RegisterBloc>(context);
 
-    return Container(
-      padding: EdgeInsets.only(top: 23.0),
-      child: choixUser
-          ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              SizedBox(height: 100),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  OutlineButton(
-                    onPressed: () {
-                      setState(() {
-                        this._asDriver = true;
-                        this._asClient = false;
-                        this.choixUser = false;
-                      });
-                    },
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Text('Chauffeur'),
-                        Icon(Icons.arrow_forward),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  OutlineButton(
-                    onPressed: () {
-                      setState(() {
-                        this._asClient = true;
-                        this._asDriver = false;
-                        this.choixUser = false;
-                      });
-                    },
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Text('Passager'),
-                        Icon(Icons.arrow_forward),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ])
-          : Column(
-              children: <Widget>[
-                Stack(
-                  alignment: Alignment.topCenter,
-                  overflow: Overflow.visible,
+    return BlocListener<RegisterBloc, RegisterState>(
+      listener: (context, state) {
+        if (state is RegisterError) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${state.message}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.only(top: 23.0),
+        child: choixUser
+            ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                SizedBox(height: 100),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Card(
-                      elevation: 2.0,
-                      color: Colors.white,
+                    OutlineButton(
+                      onPressed: () {
+                        setState(() {
+                          this._asDriver = true;
+                          this._asClient = false;
+                          this.choixUser = false;
+                        });
+                      },
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(3),
                       ),
-                      child: Container(
-                        width: 300.0,
-                        height: 360.0,
-                        child: Form(
-                          key: _formSignUp,
-                          child: ListView(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: TextFormField(
-                                  onSaved: (value) {
-                                    _cin = int.parse(value);
-                                  },
-                                  decoration: InputDecoration(labelText: "cin"),
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) {
-                                    if (value.isEmpty)
-                                      return 'Veillez saisir votre cin';
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: TextFormField(
-                                  onSaved: (value) {
-                                    _nom = value;
-                                  },
-                                  decoration: InputDecoration(labelText: "nom"),
-                                  validator: (value) {
-                                    if (value.isEmpty)
-                                      return 'veuillez saisir votre nom';
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: TextFormField(
-                                  onSaved: (value) {
-                                    _prenom = value;
-                                  },
-                                  decoration:
-                                      InputDecoration(labelText: "prenom"),
-                                  validator: (value) {
-                                    if (value.isEmpty)
-                                      return 'veuillez saisir votre prénom';
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: DropdownButtonFormField<String>(
-                                  onSaved: (value) {
-                                    _sexe = value;
-                                  },
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _sexe = value;
-                                    });
-                                  },
-                                  value: _sexe ?? _listSexe.first,
-                                  items: _listSexe
-                                      .map<DropdownMenuItem<String>>(
-                                        (item) => DropdownMenuItem<String>(
-                                          child: Text(item),
-                                          value: item,
-                                        ),
-                                      )
-                                      .toList(),
-                                  decoration:
-                                      InputDecoration(labelText: "sexe"),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: TextFormField(
-                                  onSaved: (value) {
-                                    _tel = value;
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty)
-                                      return 'veuillez saisir votre numéro de téléphone';
-                                    else if (value.length < 8)
-                                      return 'veuillez saisir un numéro de téléphone valide';
-                                    return null;
-                                  },
-                                  decoration:
-                                      InputDecoration(labelText: "téléphone"),
-                                  keyboardType: TextInputType.phone,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: TextFormField(
-                                  onSaved: (value) {
-                                    _email = value;
-                                  },
-                                  decoration:
-                                      InputDecoration(labelText: "email"),
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: (value) {
-                                    Pattern pattern =
-                                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                    RegExp regex = new RegExp(pattern);
-                                    if (!regex.hasMatch(value))
-                                      return 'Enter Valid Email';
-                                    else
-                                      return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: TextFormField(
-                                  obscureText: true,
-                                  controller: _controllerPassword,
-                                  onSaved: (value) {
-                                    _password = value;
-                                  },
-                                  decoration: InputDecoration(
-                                      labelText: "mot de passe"),
-                                  validator: (value) {
-                                    if (value.isEmpty)
-                                      return 'veuillez saisir votre mot de passe';
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: TextFormField(
-                                  obscureText: true,
-                                  controller: _controllerConfirmPassword,
-                                  onSaved: (value) {
-                                    _confirmedPassword = value;
-                                  },
-                                  decoration: InputDecoration(
-                                      labelText: "confirmer mot de passe"),
-                                  validator: (value) {
-                                    String error =
-                                        'veuillez saisir votre mot de passe';
-                                    if (value.isEmpty)
-                                      return error;
-                                    else if (_controllerPassword.text !=
-                                        _controllerConfirmPassword.text)
-                                      return error;
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                              )
-                            ],
-                          ),
-                        ),
+                      child: Row(
+                        children: <Widget>[
+                          Text('Chauffeur'),
+                          Icon(Icons.arrow_forward),
+                        ],
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 340.0),
-                      /*  decoration: new BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Theme.Colors.loginGradientStart,
-                      offset: Offset(1.0, 6.0),
-                      blurRadius: 20.0,
+                    SizedBox(
+                      width: 15,
                     ),
-                    BoxShadow(
-                      color: Theme.Colors.loginGradientEnd,
-                      offset: Offset(1.0, 6.0),
-                      blurRadius: 20.0,
-                    ),
-                  ],
-                  gradient: new LinearGradient(
-                      colors: [
-                        Theme.Colors.loginGradientEnd,
-                        Theme.Colors.loginGradientStart
-                      ],
-                      begin: const FractionalOffset(0.2, 0.2),
-                      end: const FractionalOffset(1.0, 1.0),
-                      stops: [0.0, 1.0],
-                      tileMode: TileMode.clamp),
-                ),*/
-                      child: MaterialButton(
-                        //highlightColor: Colors.transparent,
-                        // splashColor: Theme.Colors.loginGradientEnd,
-                        color: Colors.black,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 42.0),
-                          child: Text(
-                            "s'inscrire",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25.0,
-                                fontFamily: "WorkSansBold"),
-                          ),
-                        ),
-                        onPressed: () {
-                          if (_formSignUp.currentState.validate()) {
-                            _formSignUp.currentState.save();
-
-                            bloc.add(
-                              AddResgister(
-                                utilisateur: Utilisateur(
-                                  cin: _cin,
-                                  email: _email,
-                                  tel: _tel,
-                                  nom: _nom,
-                                  prenom: _prenom,
-                                  sexe: _sexe,
-                                  password: _password,
-                                  etatInscription: _asClient
-                                      ? EtatInscription.accepterInscription
-                                      : _asDriver
-                                          ? EtatInscription.enAttenteInscription
-                                          : EtatInscription.inconnuInscription,
-                                  typeUtilisateur: _asClient
-                                      ? TypeUtilisateur.passager
-                                      : _asDriver
-                                          ? TypeUtilisateur.chauffeur
-                                          : TypeUtilisateur.inconnu,
-                                ),
-                              ),
-                            );
-                          }
-                        },
+                    OutlineButton(
+                      onPressed: () {
+                        setState(() {
+                          this._asClient = true;
+                          this._asDriver = false;
+                          this.choixUser = false;
+                        });
+                      },
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3),
                       ),
-                    ),
+                      child: Row(
+                        children: <Widget>[
+                          Text('Passager'),
+                          Icon(Icons.arrow_forward),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              ],
-            ),
+              ])
+            : Column(
+                children: <Widget>[
+                  Stack(
+                    alignment: Alignment.topCenter,
+                    overflow: Overflow.visible,
+                    children: <Widget>[
+                      Card(
+                        elevation: 2.0,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Container(
+                          width: 300.0,
+                          height: 360.0,
+                          child: Form(
+                            key: _formSignUp,
+                            child: ListView(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: TextFormField(
+                                    onSaved: (value) {
+                                      _cin = int.parse(value);
+                                    },
+                                    decoration:
+                                        InputDecoration(labelText: "cin"),
+                                    keyboardType: TextInputType.number,
+                                    validator: (value) {
+                                      if (value.isEmpty)
+                                        return 'Veillez saisir votre cin';
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: TextFormField(
+                                    onSaved: (value) {
+                                      _nom = value;
+                                    },
+                                    decoration:
+                                        InputDecoration(labelText: "nom"),
+                                    validator: (value) {
+                                      if (value.isEmpty)
+                                        return 'veuillez saisir votre nom';
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: TextFormField(
+                                    onSaved: (value) {
+                                      _prenom = value;
+                                    },
+                                    decoration:
+                                        InputDecoration(labelText: "prenom"),
+                                    validator: (value) {
+                                      if (value.isEmpty)
+                                        return 'veuillez saisir votre prénom';
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: DropdownButtonFormField<String>(
+                                    onSaved: (value) {
+                                      _sexe = value;
+                                    },
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _sexe = value;
+                                      });
+                                    },
+                                    value: _sexe ?? _listSexe.first,
+                                    items: _listSexe
+                                        .map<DropdownMenuItem<String>>(
+                                          (item) => DropdownMenuItem<String>(
+                                            child: Text(item),
+                                            value: item,
+                                          ),
+                                        )
+                                        .toList(),
+                                    decoration:
+                                        InputDecoration(labelText: "sexe"),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: TextFormField(
+                                    onSaved: (value) {
+                                      _tel = value;
+                                    },
+                                    validator: (value) {
+                                      if (value.isEmpty)
+                                        return 'veuillez saisir votre numéro de téléphone';
+                                      else if (value.length < 8)
+                                        return 'veuillez saisir un numéro de téléphone valide';
+                                      return null;
+                                    },
+                                    decoration:
+                                        InputDecoration(labelText: "téléphone"),
+                                    keyboardType: TextInputType.phone,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: TextFormField(
+                                    onSaved: (value) {
+                                      _email = value;
+                                    },
+                                    decoration:
+                                        InputDecoration(labelText: "email"),
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (value) {
+                                      Pattern pattern =
+                                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                      RegExp regex = new RegExp(pattern);
+                                      if (!regex.hasMatch(value))
+                                        return 'Enter Valid Email';
+                                      else
+                                        return null;
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: TextFormField(
+                                    obscureText: true,
+                                    controller: _controllerPassword,
+                                    onSaved: (value) {
+                                      _password = value;
+                                    },
+                                    decoration: InputDecoration(
+                                        labelText: "mot de passe"),
+                                    validator: (value) {
+                                      if (value.isEmpty)
+                                        return 'veuillez saisir votre mot de passe';
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: TextFormField(
+                                    obscureText: true,
+                                    controller: _controllerConfirmPassword,
+                                    onSaved: (value) {
+                                      _confirmedPassword = value;
+                                    },
+                                    decoration: InputDecoration(
+                                        labelText: "confirmer mot de passe"),
+                                    validator: (value) {
+                                      String error =
+                                          'veuillez saisir votre mot de passe';
+                                      if (value.isEmpty)
+                                        return error;
+                                      else if (_controllerPassword.text !=
+                                          _controllerConfirmPassword.text)
+                                        return error;
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 50,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 340.0),
+                        /*  decoration: new BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Theme.Colors.loginGradientStart,
+                          offset: Offset(1.0, 6.0),
+                          blurRadius: 20.0,
+                        ),
+                        BoxShadow(
+                          color: Theme.Colors.loginGradientEnd,
+                          offset: Offset(1.0, 6.0),
+                          blurRadius: 20.0,
+                        ),
+                      ],
+                      gradient: new LinearGradient(
+                          colors: [
+                            Theme.Colors.loginGradientEnd,
+                            Theme.Colors.loginGradientStart
+                          ],
+                          begin: const FractionalOffset(0.2, 0.2),
+                          end: const FractionalOffset(1.0, 1.0),
+                          stops: [0.0, 1.0],
+                          tileMode: TileMode.clamp),
+                    ),*/
+                        child: MaterialButton(
+                          //highlightColor: Colors.transparent,
+                          // splashColor: Theme.Colors.loginGradientEnd,
+                          color: Colors.black,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0))),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 42.0),
+                            child: Text(
+                              "s'inscrire",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25.0,
+                                  fontFamily: "WorkSansBold"),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (_formSignUp.currentState.validate()) {
+                              _formSignUp.currentState.save();
+
+                              bloc.add(
+                                AddResgister(
+                                  utilisateur: Utilisateur(
+                                    cin: _cin,
+                                    email: _email,
+                                    tel: _tel,
+                                    nom: _nom,
+                                    prenom: _prenom,
+                                    sexe: _sexe,
+                                    password: _password,
+                                    etatInscription: _asClient
+                                        ? EtatInscription.accepterInscription
+                                        : _asDriver
+                                            ? EtatInscription
+                                                .enAttenteInscription
+                                            : EtatInscription
+                                                .inconnuInscription,
+                                    typeUtilisateur: _asClient
+                                        ? TypeUtilisateur.passager
+                                        : _asDriver
+                                            ? TypeUtilisateur.chauffeur
+                                            : TypeUtilisateur.inconnu,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }
@@ -952,7 +969,6 @@ class _LoginSignInState extends State<LoginSignIn> {
                                   color: Colors.black),
                               decoration: InputDecoration(
                                 hintText: "cin",
-                                
                                 hintStyle: TextStyle(
                                     fontFamily: "WorkSansSemiBold",
                                     fontSize: 17.0),
